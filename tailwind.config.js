@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: [`Inter`, ...defaultTheme.fontFamily.sans],
+        sans: [`SpaceGrotesk`, ...defaultTheme.fontFamily.sans],
       },
       margin: {
         9: `2.25rem`,
