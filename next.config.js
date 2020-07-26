@@ -1,16 +1,8 @@
-require(`dotenv`).config();
+var path = require(`path`);
 
-const rehypePrism = require(`@mapbox/rehype-prism`);
-const withMDX = require(`@next/mdx`)({
-  extension: /\.mdx?$/,
-  options: {
-    rehypePlugins: [rehypePrism],
+module.exports = {
+  webpack(config, options) {
+    config.resolve.alias[`@/`] = path.join(__dirname);
+    return config;
   },
-});
-
-module.exports = withMDX({
-  pageExtensions: [`js`, `md`, `mdx`],
-  env: {
-    GITHUB_API_TOKEN: process.env.GITHUB_API_TOKEN,
-  },
-});
+};

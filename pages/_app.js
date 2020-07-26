@@ -1,4 +1,6 @@
 import "../css/index.css";
+import "react-dropzone-uploader/dist/styles.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import App from "next/app";
 import Head from "next/head";
@@ -6,10 +8,17 @@ import Router from "next/router";
 import React from "react";
 import ReactGA from "react-ga";
 
-const SEO_TITLE = `Taylor Bryant - Software Engineer`;
-const SEO_DESCRIPTION = `Hi, my name is Taylor Bryant. I am a software engineer from Memphis, TN. I build software products using React, Next.js, and GraphQL at a company called Livestock Nutrition Center. In my spare time, I write music, build side projects and write about what I've learned working on an engineering team.`;
+import NProgress from "nprogress"; //nprogress module
+import "nprogress/nprogress.css"; //styles of nprogress
+
+const SEO_TITLE = `Vestrade`;
+const SEO_DESCRIPTION = `Vestrade`;
 
 Router.events.on(`routeChangeComplete`, (url) => ReactGA.pageview(url));
+
+Router.events.on(`routeChangeStart`, () => NProgress.start());
+Router.events.on(`routeChangeComplete`, () => NProgress.done());
+Router.events.on(`routeChangeError`, () => NProgress.done());
 
 class MyApp extends App {
   componentDidMount() {
@@ -30,86 +39,7 @@ class MyApp extends App {
             key="html-meta-description"
             name="description"
           />
-          {/* Google / Search Engine Tags */}
-          <meta content={SEO_TITLE} itemProp="name" key="google-name" />
-          <meta
-            content={SEO_DESCRIPTION}
-            itemProp="description"
-            key="google-description"
-          />
-          <meta
-            content="/images/favicon/android-chrome-256x256.png"
-            itemProp="image"
-            key="google-image"
-          />
-          {/* Facebook Meta Tags */}
-          <meta
-            content={`https://bryant.io`}
-            key="facebook-url"
-            property="og:url"
-          />
-          <meta content="website" key="facebook-type" property="og:type" />
-          <meta content={SEO_TITLE} key="facebook-title" property="og:title" />
-          <meta
-            content={SEO_DESCRIPTION}
-            key="facebook-description"
-            property="og:description"
-          />
-          <meta
-            content="/images/favicon/android-chrome-256x256.png"
-            key="facebook-image"
-            property="og:image"
-          />
-          {/* Twitter Meta Tags */}
-          <meta
-            content="summary_large_image"
-            key="twitter-card"
-            name="twitter:card"
-          />
-          <meta content={SEO_TITLE} key="twitter-title" name="twitter:title" />
-          <meta
-            content={SEO_DESCRIPTION}
-            key="twitter-description"
-            name="twitter:description"
-          />
-          <meta
-            content="/images/favicon/android-chrome-256x256.png"
-            key="twitter-iamge"
-            name="twitter:image"
-          />
-          {/* Favicon */}
-          <link
-            href="/images/favicon/apple-touch-icon.png"
-            rel="apple-touch-icon"
-            sizes="180x180"
-          />
-          <link
-            href="/images/favicon/favicon-32x32.png"
-            rel="icon"
-            sizes="32x32"
-            type="image/png"
-          />
-          <link
-            href="/images/favicon/favicon-16x16.png"
-            rel="icon"
-            sizes="16x16"
-            type="image/png"
-          />
-          <link href="/images/favicon/site.webmanifest" rel="manifest" />
-          <link
-            color="#5bbad5"
-            href="/images/favicon/safari-pinned-tab.svg"
-            rel="mask-icon"
-          />
-          <link href="/images/favicon/favicon.ico" rel="shortcut icon" />
-          <meta content="#00aba9" name="msapplication-TileColor" />
-          <meta
-            content="/images/favicon/browserconfig.xml"
-            name="msapplication-config"
-          />
-          <meta content="#ffffff" name="theme-color" />
         </Head>
-
         <Component {...pageProps} />
       </>
     );

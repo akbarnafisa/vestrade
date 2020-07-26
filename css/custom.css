@@ -1,6 +1,85 @@
-a {
-  @apply font-bold;
-  @apply underline;
-  text-decoration-thickness: 0.125em;
-  text-underline-offset: 1.5px;
+
+button:disabled {
+  @apply bg-gray-500;
+  cursor: not-allowed;
+}
+input:disabled {
+  @apply bg-gray-500;
+  cursor: not-allowed;
+}
+
+.btn  {
+  @apply shadow-lg;
+  @apply rounded;
+  @apply text-center;
+  @apply font-semibold;
+  transform: .3s ease;
+  cursor: pointer;
+
+}
+.btn-primary {
+  @apply text-white;
+  @apply font-semibold;
+  @apply bg-purple-700;
+}
+
+.btn-primary:not(:disabled):hover {
+  @apply bg-purple-800;
+}
+
+.btn-secondary {
+  @apply bg-white;
+  @apply border-purple-700;
+  @apply text-purple-700;
+}
+
+.btn-secondary:not(:disabled):hover {
+  @apply bg-gray-100;
+}
+
+.btn-ghost {
+  @apply text-purple-700;
+  @apply border;
+  @apply border-purple-700;
+}
+
+.dasboard-table table tbody tr td {
+  word-break: break-all;
+}
+
+.modal-dashboard {
+  @apply fixed top-0 left-0 min-h-screen min-w-full flex items-center justify-center;
+}
+
+.modal-dashboard .modal-dashboard__overlay {
+  @apply bg-black opacity-50 absolute top-0 left-0 bottom-0 right-0;
+
+}
+
+.modal-dashboard .modal-dashboard__content {
+  @apply bg-white py-6 px-8 relative z-50;
+  width: 500px;
+  overflow-y: scroll;
+  max-height: 90vh;
+}
+
+.modal-dashboard .modal-dashboard__content .modal-dashboard__content__title {
+  @apply text-3xl mb-2 font-bold;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.no-scroll-100 {
+  overflow: hidden;
+}
+
+.uploader__delete {
+  position: absolute;
+  top: -4px;
+  z-index: 1;
+  right: 8px;
 }
