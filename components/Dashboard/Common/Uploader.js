@@ -1,3 +1,4 @@
+import React from "react";
 import Dropzone from "react-dropzone-uploader";
 
 export default function Uploader({ label, onChange, onRemove, assets }) {

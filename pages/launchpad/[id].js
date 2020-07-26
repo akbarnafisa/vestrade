@@ -1,3 +1,4 @@
+import React from "react";
 import PageLayout from "@/components/Layout/page-layout";
 import Carousel from "@/components/Common/Carousel";
 import Link from "next/link";
@@ -172,16 +173,16 @@ const Breadcrumb = ({ symbol }) => {
   );
 };
 
-export async function getStaticPaths() {
+export async function getStaticPaths () {
   const res = await axios.get(`http://api.vestrade.io/tokens`);
   const tokens = await res.data.data;
   return {
-    paths: tokens?.map((token) => `/launchpad/${token.tokenAddr}`) || [],
+    paths: tokens?.map((token) => `/launchpad/${token.symbol}`) || [],
     fallback: true,
   };
 }
 
-export async function getStaticProps({ params, preview = null }) {
+export async function getStaticProps ({ params, preview = null }) {
   const res = await axios.get(
     `http://api.vestrade.io/tokens?symbol=${params.id}`
   );
@@ -193,7 +194,7 @@ export async function getStaticProps({ params, preview = null }) {
   };
 }
 
-export default function Home({ token }) {
+export default function Home ({ token }) {
   return (
     <PageLayout>
       <div className="bg-gray-300 pb-8">

@@ -1,3 +1,4 @@
+import React from "react";
 import { formatDate, get } from "@/utils/index";
 
 export default ({ offerings }) => {

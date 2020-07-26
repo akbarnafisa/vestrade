@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+
 import Button from "@/components/Common/Button";
 export default ({ closeModal }) => {
   const Stepper = ({

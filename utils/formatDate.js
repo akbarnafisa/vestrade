@@ -8,7 +8,7 @@
  * @example
  * formatDate(new Date(),'DD MMMM') ---> 12 February
  */
-export const formatDate = (dateStr, formatStr, lang = ``) => {
+export const formatDate = (dateStr, formatStr) => {
   const language = `id_ID`;
   const d = new Date(dateStr);
   if (toString.call(d) !== `[object Date]` || isNaN(d.getTime())) {

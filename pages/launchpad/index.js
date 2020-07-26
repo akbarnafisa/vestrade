@@ -1,3 +1,4 @@
+import React from "react";
 import PageLayout from "@/components/Layout/page-layout";
 import Card from "@/components/Common/Card";
 import Hero from "@/components/Common/Hero";
@@ -57,7 +58,6 @@ const Cards = ({ items = [] }) => {
         ))}
       </div>
       <style jsx>
-        {``}
         {`
           ::placeholder {
             /* Chrome, Firefox, Opera, Safari 10.1+ */

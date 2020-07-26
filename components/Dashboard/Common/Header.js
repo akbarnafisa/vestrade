@@ -1,3 +1,4 @@
+import React from "react";
 import Button from "@/components/Common/Button";
 export default ({ title, desc, btn, openModal }) => {
   return (
