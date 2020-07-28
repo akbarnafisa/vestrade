@@ -16,23 +16,21 @@ function PageLayout({ children }) {
   const [accounts, setAccounts] = useState(null)
 
   useEffect(() => {
-    const init = async () => {
-      const web3 = await getWeb3();
-      web3.eth.handleRevert = true
-
-      // Use web3 to get the user's accounts.
+    const initWeb3 = async () => {
       try {
+        const web3 = await getWeb3();
+        web3.eth.handleRevert = true
         const accounts = await web3.eth.getAccounts();
         // logged in
+        console.log('logged in')
         setWeb3(web3)
         setAccounts(accounts)
       } catch (err) {
-        // not logged in
         console.log(err)
       }
     }
     if (!web3) {
-      init()
+      initWeb3()
     }
   }, [web3])
 

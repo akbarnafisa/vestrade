@@ -18,10 +18,10 @@ const TokenRow = ({token, index, setModalEditToken}) => {
       const totalSupply = await tokenContract.methods.totalSupply().call()
       setTotalSupply(prettyBalance(totalSupply))
     }
-    if (web3 && token) {
+    if (web3 && token && !totalSupply) {
       getTotalSupply()
     }
-  }, [web3, token])
+  }, [web3, token, totalSupply])
 
   return (
     <tr className={index % 2 !== 0 ? `bg-gray-200` : ``} key={index}>
@@ -59,7 +59,7 @@ export default ({ tokens, setModalEditToken }) => {
         <tbody>
           {tokens.map((token, index) => {
             return (
-              <TokenRow token={token} index={index} setModalEditToken={setModalEditToken} />
+              <TokenRow token={token} index={index} setModalEditToken={setModalEditToken} key={index} />
             );
           })}
         </tbody>
