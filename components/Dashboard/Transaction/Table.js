@@ -1,8 +1,7 @@
 import React from "react";
-import { formatDate, get, prettyBalance } from "@/utils/index";
+import { formatDate, get, prettyBalance, prettyAddress } from "@/utils/index";
 
 export default ({ transactions }) => {
-  console.log(transactions)
   return (
     <div className="relative overflow-hidden">
       <div className="dasboard-table  relative mx-auto">
@@ -26,17 +25,17 @@ export default ({ transactions }) => {
                   key={index}
                 >
                   <td className="border-t px-6 py-4">
-                    {get(trx, `txId`, `-`)}
+                    {prettyAddress(get(trx, `txId`, `-`))}
                   </td>
                   <td className="border-t px-6 py-4">
-                    {get(trx, `tokenAddr`, `-`)}
+                    {prettyAddress(get(trx, `tokenAddr`, `-`))}
                   </td>
                   <td className="border-t px-6 py-4">{prettyBalance(trx.tokens)}</td>
                   <td className="border-t px-6 py-4">
                     {prettyBalance(trx.amount)}
                   </td>
                   <td className="border-t px-6 py-4">
-                    {get(trx, `fromAddr`, `-`)}
+                    {prettyAddress(get(trx, `fromAddr`, `-`))}
                   </td>
                   <td className="border-t px-6 py-4">
                     {formatDate(
