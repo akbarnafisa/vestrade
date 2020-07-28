@@ -106,12 +106,13 @@ export async function getServerSideProps() {
   const tokens = await res.data.data;
   return {
     props: {
-      tokens: tokens.map(token => token.detail),
+      tokens: tokens
     },
   };
 }
 
 export default function Home({ tokens }) {
+  console.log(tokens)
   return (
     <PageLayout>
       <div className="bg-gray-300">
