@@ -5,6 +5,9 @@
       "@/components/*": [
         "./components/*"
       ],
+      "@/contracts/*": [
+        "./contracts/*"
+      ],
       "@/utils/*": [
         "./utils/*"
       ],

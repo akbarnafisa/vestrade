@@ -9,7 +9,7 @@ import Header from "@/components/Dashboard/Common/Header";
 
 import { lockScroll } from "@/utils/index";
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res = await axios.get(`http://api.vestrade.io/offerings`);
   const offering = await res.data.data;
   return {
