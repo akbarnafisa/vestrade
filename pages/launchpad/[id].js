@@ -1,11 +1,15 @@
-import React from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import PageLayout from "@/components/Layout/page-layout";
 import Carousel from "@/components/Common/Carousel";
 import Link from "next/link";
 import { get } from "@/utils/index";
 import axios from "axios";
+import JSBI from 'jsbi'
 
 import Button from "@/components/Common/Button";
+import { useEth } from "@/components/Layout/page-layout";
+import VestradeERC20 from "@/contracts/Vestrade_ERC20.json";
+import VestradeOffering from "@/contracts/Vestrade_Offering.json";
 
 const StockDetail = () => {
   return (
@@ -88,6 +92,46 @@ const StockMarketStatus = () => {
 };
 
 const ProductDetail = ({ token = {} }) => {
+  const { web3, accounts, setAccounts } = useEth()
+
+  const unlockWallet = async () => {
+    const accounts = await web3.eth.requestAccounts();
+    setAccounts(accounts);
+  }
+
+  const buy = async () => {
+    console.log(token)
+
+    const amount = 100
+    const valueInETH = amount / token.rate
+
+    const offeringContract = new web3.eth.Contract(
+      VestradeOffering.abi,
+      token.addr
+    )
+    const tokenContract = new web3.eth.Contract(
+      VestradeERC20.abi,
+      token.tokenAddr
+    )
+    const decimals = await tokenContract.methods.decimals().call()
+    const amountPrecision = JSBI.BigInt(amount * 10 ** decimals)
+    const value = web3.utils.toWei(valueInETH.toString(), 'ether')
+
+    offeringContract.methods.buy(amountPrecision.toString()).send({
+      from: accounts[0],
+      value: value
+    })
+      .once('error', (error) => {
+        console.log(error)
+      })
+      .once('transactionHash', (transactionHash) => {
+        console.log(`tx hash ${transactionHash}`)
+      })
+      .once('confirmation', (confirmationNumber, receipt) => {
+        console.log(`tx confirmed, check your wallet`)
+      })
+  }
+
   return (
     <div className="product border rounded mb-4 border-gray-400 flex items-center bg-white">
       <div className="w-2/5 bg-grey-900 h-full">
@@ -131,9 +175,6 @@ const ProductDetail = ({ token = {} }) => {
             </div>
           </div>
           <div>
-            <Button className="mr-4" type="btn-ghost">
-              Profil Perusahaan
-            </Button>
             <Button
               disabled={!get(token, `prospectusUrl`, ``)}
               onClick={() =>
@@ -146,6 +187,17 @@ const ProductDetail = ({ token = {} }) => {
             >
               Download Perspektus
             </Button>
+            {
+              (accounts && accounts[0]) ? (
+                <Button onClick={buy} className="mr-4" type="btn-ghost">
+                  Beli
+                </Button>
+              ) : (
+                  <Button onClick={unlockWallet} onClick={buy} className="mr-4" type="btn-ghost">
+                    Connect Wallet
+                  </Button>
+                )
+            }
           </div>
         </div>
       </div>
@@ -173,18 +225,18 @@ const Breadcrumb = ({ symbol }) => {
   );
 };
 
-export async function getStaticPaths () {
-  const res = await axios.get(`http://api.vestrade.io/tokens`);
-  const tokens = await res.data.data;
-  return {
-    paths: tokens?.map((token) => `/launchpad/${token.symbol}`) || [],
-    fallback: true,
-  };
-}
+// export async function getStaticPaths() {
+//   const res = await axios.get(`http://api.vestrade.io/tokens`);
+//   const tokens = await res.data.data;
+//   return {
+//     paths: tokens?.map((token) => `/launchpad/${token.symbol}`) || [],
+//     fallback: true,
+//   };
+// }
 
-export async function getStaticProps ({ params, preview = null }) {
+export async function getServerSideProps({ params, preview = null }) {
   const res = await axios.get(
-    `http://api.vestrade.io/tokens?symbol=${params.id}`
+    `http://api.vestrade.io/launchpads?addr=${params.id}`
   );
   const token = await res.data.data[0];
   return {
@@ -194,19 +246,37 @@ export async function getStaticProps ({ params, preview = null }) {
   };
 }
 
-export default function Home ({ token }) {
+const Page = ({ token }) => {
+  const { web3, setAccounts } = useEth()
+
+  useEffect(() => {
+    const getAccounts = async () => {
+      const accounts = await web3.eth.getAccounts()
+      setAccounts(accounts)
+    }
+    if (web3) {
+      getAccounts()
+    }
+  }, [web3])
+
   return (
-    <PageLayout>
-      <div className="bg-gray-300 pb-8">
-        <div className="container mx-auto ">
-          <Breadcrumb symbol={get(token, `symbol`, ``)} />
-          <ProductDetail token={token} />
-          <div className="flex">
-            <StockDetail />
-            <StockMarketStatus />
-          </div>
+    <div className="bg-gray-300 pb-8">
+      <div className="container mx-auto ">
+        <Breadcrumb symbol={get(token, `symbol`, ``)} />
+        <ProductDetail token={token} />
+        <div className="flex">
+          <StockDetail />
+          <StockMarketStatus />
         </div>
       </div>
+    </div>
+  )
+}
+
+export default function Home({ token }) {
+  return (
+    <PageLayout>
+      <Page token={token} />
     </PageLayout>
   );
 }

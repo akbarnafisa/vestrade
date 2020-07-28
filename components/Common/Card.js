@@ -10,7 +10,7 @@ export default function Card({ item }) {
   };
   return (
     <div className="p-3 pb-8 cursor-pointer no-underline font-normal">
-      <Link href={`/launchpad/${get(item, `symbol`, ``)}`}>
+      <Link href={`/launchpad/${get(item, `addr`, ``)}`}>
         <a className="shadow-lg block bg-white rounded overflow-hidden font-normal no-underline">
           <div
             className="w-full h-48"

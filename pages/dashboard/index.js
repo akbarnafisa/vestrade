@@ -49,7 +49,7 @@ export default function Dashboard({ tokens }) {
       />
       <Header
         btn="Add new Token"
-        desc="Description about token"
+        desc="List all of the token"
         openModal={() => {
           setModalToken(true);
           lockScroll(true);
