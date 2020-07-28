@@ -91,7 +91,6 @@ export default ({ closeModalToken, setInitTokens }) => {
           <div className="mb-2 text-center">Token Symbol</div>
           <div className="text-center w-full py-2 rounded bg-gray-200 text-2xl font-semibold">
             <Input
-              label="Symbol"
               onChange={(val) => setSymbol(val)}
               placeholder="Symbol"
             />
@@ -105,6 +104,7 @@ export default ({ closeModalToken, setInitTokens }) => {
         <Input
           label="Issuer’s ETH Address"
           value={eth}
+          disabled={true}
           onChange={(val) => setEth(val)}
           placeholder="ETH Address"
         />
