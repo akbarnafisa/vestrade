@@ -11,7 +11,7 @@ import Header from "@/components/Dashboard/Common/Header";
 import { lockScroll } from "@/utils/index";
 import { ToastContainer } from "react-toastify";
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res = await axios.get(`http://api.vestrade.io/tokens`);
   const tokens = await res.data.data;
   return {

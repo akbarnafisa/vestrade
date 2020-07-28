@@ -1,7 +1,8 @@
 import React from "react";
-import { formatDate, get } from "@/utils/index";
+import { formatDate, get, prettyBalance } from "@/utils/index";
 
 export default ({ transactions }) => {
+  console.log(transactions)
   return (
     <div className="relative overflow-hidden">
       <div className="dasboard-table  relative mx-auto">
@@ -11,7 +12,7 @@ export default ({ transactions }) => {
               <th className="w-3/12 min px-6 py-4 text-left">Tranx ID</th>
               <th className="w-3/12 px-6 py-4 text-left">Tokens</th>
               <th className="w-3/12 px-6 py-4 text-left">Amount</th>
-              <th className="w-3/12 px-6 py-4 text-left">USD Amount</th>
+              <th className="w-3/12 px-6 py-4 text-left">ETH Amount</th>
 
               <th className="w-3/12 px-6 py-4 text-left">From</th>
               <th className="w-3/12 px-6 py-4 text-left">Date</th>
@@ -30,16 +31,16 @@ export default ({ transactions }) => {
                   <td className="border-t px-6 py-4">
                     {get(trx, `tokenAddr`, `-`)}
                   </td>
-                  <td className="border-t px-6 py-4">-{/* {trx.amount} */}</td>
+                  <td className="border-t px-6 py-4">{prettyBalance(trx.tokens)}</td>
                   <td className="border-t px-6 py-4">
-                    -{/* {trx.USDAmount} */}
+                    {prettyBalance(trx.amount)}
                   </td>
                   <td className="border-t px-6 py-4">
                     {get(trx, `fromAddr`, `-`)}
                   </td>
                   <td className="border-t px-6 py-4">
                     {formatDate(
-                      Number(get(trx, `timestamp`, 0)),
+                      Number(get(trx, `timestamp`, 0)) * 1000,
                       `DD MMM YYYY`
                     )}
                   </td>
