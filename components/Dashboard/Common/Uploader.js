@@ -1,7 +1,7 @@
 import React from "react";
 import Dropzone from "react-dropzone-uploader";
 
-export default function Uploader({ label, onChange, onRemove, assets }) {
+export default function Uploader ({ label, onChange, onRemove, assets }) {
   const getUploadParams = ({ file }) => {
     const url = `http://api.vestrade.io/upload`;
     const body = new FormData();
@@ -93,7 +93,6 @@ export default function Uploader({ label, onChange, onRemove, assets }) {
             onRemove(asset);
           }}
         >
-          >
           <img alt="" className="w-full" src="/icon/delete.svg" />
         </div>
       </div>
