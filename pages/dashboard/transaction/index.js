@@ -4,9 +4,18 @@ import axios from "axios";
 import DashboardLayout from "@/components/Layout/dashboard";
 import Header from "@/components/Dashboard/Common/Header";
 import Table from "@/components/Dashboard/Transaction/Table";
+import { useRouter } from "next/router";
 
-export async function getServerSideProps() {
-  const res = await axios.get(`http://api.vestrade.io/transactions`);
+
+import { get } from "@/utils/index";
+
+export async function getServerSideProps ({ query }) {
+  let url = 'http://api.vestrade.io/transactions'
+  const tokenAddr = get(query, 'tokenAddr', '')
+  if (tokenAddr) {
+    url = `${url}?tokenAddr=${tokenAddr}`
+  }
+  const res = await axios.get(url)
   const transactions = await res.data.data;
   return {
     props: {
@@ -15,10 +24,19 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Transaction({ transactions }) {
+export default function Transaction ({ transactions }) {
+  const router = useRouter()
+  const descHeader = () => {
+    const tokenAddr = get(router, 'query.tokenAddr', '')
+    if (!tokenAddr) return `Transaction for all token`
+    return `Transaction for token ${tokenAddr}`
+  }
   return (
     <DashboardLayout>
-      <Header title="Transaction" />
+      <Header
+        title="Transaction"
+        desc={descHeader()}
+      />
       <Table transactions={transactions} />
     </DashboardLayout>
   );
