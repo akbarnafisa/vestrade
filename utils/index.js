@@ -7,3 +7,4 @@ export { lockScroll } from "./lockScroll";
 export { getWeb3 } from "./getWeb3";
 export { prettyBalance } from './prettyBalance';
 export { prettyAddress } from './prettyAddress';
+export { toast } from './toast'
