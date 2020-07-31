@@ -1,8 +1,17 @@
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+
 import PageLayout from "@/components/Layout/page-layout";
 import Carousel from "@/components/Common/Carousel";
+import Input from "@/components/Common/Input";
+import { ToastContainer } from "react-toastify";
+import { toast } from "@/utils/index";
+
 import Link from "next/link";
-import { get, prettyBalance } from "@/utils/index";
+import {
+  get,
+  prettyBalance,
+  lockScroll
+} from "@/utils/index";
 import axios from "axios";
 import JSBI from 'jsbi'
 
@@ -91,45 +100,12 @@ const StockMarketStatus = () => {
   );
 };
 
-const ProductDetail = ({ token = {} }) => {
+const ProductDetail = ({ token = {}, openBuyModal }) => {
   const { web3, accounts, setAccounts } = useEth()
 
   const unlockWallet = async () => {
     const accounts = await web3.eth.requestAccounts();
     setAccounts(accounts);
-  }
-
-  const buy = async () => {
-    console.log(token)
-
-    const amount = 100
-    const valueInETH = amount / token.rate
-
-    const offeringContract = new web3.eth.Contract(
-      VestradeOffering.abi,
-      token.addr
-    )
-    const tokenContract = new web3.eth.Contract(
-      VestradeERC20.abi,
-      token.tokenAddr
-    )
-    const decimals = await tokenContract.methods.decimals().call()
-    const amountPrecision = JSBI.BigInt(amount * 10 ** decimals)
-    const value = web3.utils.toWei(valueInETH.toString(), 'ether')
-
-    offeringContract.methods.buy(amountPrecision.toString()).send({
-      from: accounts[0],
-      value: value
-    })
-      .once('error', (error) => {
-        console.log(error)
-      })
-      .once('transactionHash', (transactionHash) => {
-        console.log(`tx hash ${transactionHash}`)
-      })
-      .once('confirmation', (confirmationNumber, receipt) => {
-        console.log(`tx confirmed, check your wallet`)
-      })
   }
 
   return (
@@ -176,24 +152,25 @@ const ProductDetail = ({ token = {} }) => {
           </div>
           <div>
             <Button
-              disabled={!get(token, `prospectusUrl`, ``)}
+              disabled={!get(token, 'detail.prospectusUrl', ``)}
               onClick={() =>
                 window.open(
-                  `https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf`,
+                  get(token, 'detail.prospectusUrl', ``),
                   `_blank`
                 )
               }
-              type="btn-primary"
+              type="btn-ghost"
+              className="mr-4"
             >
               Download Perspektus
             </Button>
             {
               (accounts && accounts[0]) ? (
-                <Button onClick={buy} className="mr-4" type="btn-ghost">
-                  Beli
+                <Button onClick={openBuyModal} className="mr-4" type="btn-primary">
+                  Buy Stock
                 </Button>
               ) : (
-                  <Button onClick={unlockWallet} onClick={buy} className="mr-4" type="btn-ghost">
+                  <Button onClick={unlockWallet} className="mr-4" type="btn-primary">
                     Connect Wallet
                   </Button>
                 )
@@ -211,30 +188,135 @@ const ProductDetail = ({ token = {} }) => {
   );
 };
 
-const Breadcrumb = ({ symbol }) => {
+const Breadcrumb = ({ symbol, tokenAddr }) => {
   return (
     <div className="py-4 no-underline font-normal">
       <Link href="/launchpad">
         <a className="text-gray-700">See All</a>
       </Link>
       <span className="mx-2">/</span>
-      <Link href={`/launchpad/${symbol}`}>
+      <Link href={`/launchpad/${tokenAddr}`}>
         <a className=" font-semibold text-purple-700">{symbol}</a>
       </Link>
     </div>
   );
 };
 
-// export async function getStaticPaths() {
-//   const res = await axios.get(`http://api.vestrade.io/tokens`);
-//   const tokens = await res.data.data;
-//   return {
-//     paths: tokens?.map((token) => `/launchpad/${token.symbol}`) || [],
-//     fallback: true,
-//   };
-// }
 
-export async function getServerSideProps({ params, preview = null }) {
+const BuyModal = ({ closeBuyModal, token }) => {
+  const { web3, accounts } = useEth()
+
+  const [amount, setAmount] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const _closeBuyModal = () => {
+    !loading ? closeBuyModal() : null;
+  };
+
+  const _setAmount = (val) => {
+    if (val === '') {
+      setAmount('')
+    }
+    if (/^[0-9\b]+$/.test(val)) {
+      setAmount(val)
+    }
+  }
+
+  const valueInETH = (val) => {
+    val ? 0 : val
+    return val / token.rate
+  }
+
+
+  const buy = async () => {
+    setLoading(true)
+    const formatAmount = Number(amount)
+    const valueInETH = formatAmount / token.rate
+
+    const offeringContract = new web3.eth.Contract(
+      VestradeOffering.abi,
+      token.addr
+    )
+    const tokenContract = new web3.eth.Contract(
+      VestradeERC20.abi,
+      token.tokenAddr
+    )
+    const decimals = await tokenContract.methods.decimals().call()
+    const amountPrecision = JSBI.BigInt(formatAmount * 10 ** decimals)
+    const value = web3.utils.toWei(valueInETH.toString(), 'ether')
+
+    offeringContract.methods.buy(amountPrecision.toString()).send({
+      from: accounts[0],
+      value: value
+    })
+      .once('error', (error) => {
+        toast.error('Fail to create transction!');
+        _closeBuyModal()
+        console.log(error)
+      })
+      .once('transactionHash', (transactionHash) => {
+        toast.success('Transaction hash created');
+        _closeBuyModal()
+        console.log(`tx hash ${transactionHash}`)
+      })
+      .once('confirmation', (confirmationNumber, receipt) => {
+        toast.success('Transaction confirmed, check your wallet');
+        _closeBuyModal()
+        console.log(`tx confirmed, check your wallet`)
+      })
+    setTimeout(() => _closeBuyModal(), 5000)
+  }
+
+  return (
+    <div className="modal-dashboard">
+      <div
+        className="modal-dashboard__overlay"
+        onClick={() => _closeBuyModal()}
+      ></div>
+      <div className="modal-dashboard__content">
+        <div className="modal-dashboard__content__title">Buy Stock</div>
+        <Input
+          label="Amount"
+          placeholder="Amount"
+          value={amount}
+          disabled={loading}
+          onChange={(val) => _setAmount(val)}
+        />
+        <div className="flex items-center justify-between px-2 font-semibold">
+          <div>
+            Value in ETH
+          </div>
+          <div className="text-2xl font-semibold text-orange-500">
+            {
+              valueInETH(amount)
+            }
+          </div>
+        </div>
+
+        <div className="flex mt-8">
+          <Button
+            className="w-full"
+            onClick={() => _closeBuyModal()}
+            type="btn-ghost"
+          >
+            Cancel
+          </Button>
+          <Button
+            className="ml-2 w-full"
+            disabled={loading || !Number(amount) > 0}
+            loading={loading}
+            onClick={() => buy()}
+            type="btn-primary"
+          >
+            Buy Stock
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export async function getServerSideProps ({ params, preview = null }) {
   const res = await axios.get(
     `http://api.vestrade.io/launchpads?addr=${params.id}`
   );
@@ -248,6 +330,7 @@ export async function getServerSideProps({ params, preview = null }) {
 
 const Page = ({ token }) => {
   const { web3, setAccounts } = useEth()
+  const [buyModal, setBuyModal] = useState(false)
 
   useEffect(() => {
     const getAccounts = async () => {
@@ -261,9 +344,36 @@ const Page = ({ token }) => {
 
   return (
     <div className="bg-gray-300 pb-8">
+      <ToastContainer
+        autoClose={2500}
+        closeOnClick={false}
+        draggable={false}
+        hideProgressBar={false}
+        newestOnTop={false}
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        position="top-right"
+        rtl={false}
+      />
       <div className="container mx-auto ">
-        <Breadcrumb symbol={get(token, `symbol`, ``)} />
-        <ProductDetail token={token} />
+        {buyModal ? (
+          <BuyModal
+            token={token}
+            closeBuyModal={() => {
+              setBuyModal(false);
+              lockScroll(false);
+            }}
+            setInitTokens={(val) => setInitTokens(initTokens.concat(val))}
+          />
+        ) : null}
+        <Breadcrumb
+          symbol={get(token, 'detail.symbol', '')}
+          tokenAddr={get(token, 'detail.tokenAddr', '')}
+        />
+        <ProductDetail
+          openBuyModal={() => { setBuyModal(true) }}
+          token={token}
+        />
         <div className="flex">
           <StockDetail token={token} />
           <StockMarketStatus />
@@ -273,7 +383,7 @@ const Page = ({ token }) => {
   )
 }
 
-export default function Home({ token }) {
+export default function Home ({ token }) {
   return (
     <PageLayout>
       <Page token={token} />
