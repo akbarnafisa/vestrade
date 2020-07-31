@@ -48,7 +48,7 @@ input:disabled {
 }
 
 .modal-dashboard {
-  @apply fixed top-0 left-0 min-h-screen min-w-full flex items-center justify-center;
+  @apply fixed top-0 left-0 min-h-screen min-w-full flex items-center justify-center z-10;
 }
 
 .modal-dashboard .modal-dashboard__overlay {
