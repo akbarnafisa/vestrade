@@ -76,10 +76,16 @@ export default ({ closeModal }) => {
       <div className="mt-8">
         <div>SecondStep</div>
         <div className="flex mt-8">
-          <div className="btn-ghost w-full py-3" onClick={() => closeModal()}>
+          <Button
+            className="w-full"
+            onClick={() => closeModal()}
+            type="btn-ghost"
+          >
             Cancel
-          </div>
-          <div className="btn-primary ml-2 w-full py-3">Mint</div>
+          </Button>
+          <Button className="ml-2 w-full" type="btn-primary">
+            Mint
+          </Button>
         </div>
       </div>
     );

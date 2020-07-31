@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { formatDate, get, prettyAddress, prettyBalance } from "@/utils/index";
 import VestradeOffering from "@/contracts/Vestrade_Offering.json";
 import { useEth } from "@/components/Layout/dashboard";
+import { useRouter } from "next/router";
 
-const OfferingRow = ({ offering, index }) => {
+
+
+const OfferingRow = ({ offering, index, openStepModal }) => {
   const { web3 } = useEth()
-
+  const router = useRouter()
   const [balance, setBalance] = useState('')
 
   useEffect(() => {
@@ -24,7 +27,25 @@ const OfferingRow = ({ offering, index }) => {
   }, [web3, offering, balance])
 
   return (
-    <tr className={index % 2 !== 0 ? `bg-gray-200` : ``} key={index}>
+    <tr
+      onClick={() => router.push(`/dashboard/transaction?tokenAddr=${get(offering, 'tokenAddr', '')}`)}
+      className="hover:bg-gray-200 cursor-pointer" key={index}
+    >
+      <td className="border-t px-6 py-4">
+        {
+          get(offering, 'isActive', '') ?
+            <span className="font-semibold  text-green-500">
+              Active
+            </span>
+            :
+            <span onClick={(e) => {
+              e.stopPropagation();
+              openStepModal()
+            }} className="font-semibold  text-red-500 cursor-pointer">
+              Inactive
+            </span>
+        }
+      </td>
       <td className="border-t px-6 py-4">
         {prettyAddress(get(offering, `tokenAddr`, `-`))}
       </td>
@@ -59,32 +80,71 @@ const OfferingRow = ({ offering, index }) => {
           `DD MMM YYYY`
         )}
       </td>
+
     </tr>
   )
 }
 
-export default ({ offerings }) => {
+export default ({ offerings, openStepModal }) => {
   return (
-    <div className="dasboard-table relative mx-auto">
-      <table className="table-fixed bg-white w-full shadow rounded overflow-hidden">
-        <thead>
-          <tr className="bg-gray-400">
-            <th className="w-2/12 px-6 py-4 text-left">Address</th>
-            <th className="w-2/12 px-6 py-4 text-left">Price</th>
-            <th className="w-2/12 px-6 py-4 text-left">Available</th>
-            <th className="w-2/12 px-6 py-4 text-left">Supply</th>
-            <th className="w-2/12 px-6 py-4 text-left">Start Date</th>
-            <th className="w-2/12 px-6 py-4 text-left">End Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {offerings.map((offering, index) => {
-            return (
-              <OfferingRow offering={offering} index={index} key={index} />
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="relative overflow-hidden">
+      <div className="dasboard-table  relative mx-auto">
+        <table className=" bg-white w-full shadow rounded overflow-hidden">
+          <thead>
+            <tr className="bg-gray-400">
+              <th className="w-2/12 px-6 py-4 text-left">Status</th>
+              <th className="w-2/12 px-6 py-4 text-left">Address</th>
+              <th className="w-2/12 px-6 py-4 text-left">Price</th>
+              <th className="w-2/12 px-6 py-4 text-left">Available</th>
+              <th className="w-2/12 px-6 py-4 text-left">Supply</th>
+              <th className="w-2/12 px-6 py-4 text-left">Start Date</th>
+              <th className="w-2/12 px-6 py-4 text-left">End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {offerings.map((offering, index) => {
+              return (
+                <OfferingRow offering={offering} openStepModal={openStepModal} index={index} key={index} />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div className="inset-shaddow"></div>
+      <style jsx>
+        {`
+          .inset-shaddow {
+            width: 10px;
+            height: 100%;
+            top: 0;
+            right: 0;
+            position: absolute;
+            background: white;
+            -moz-box-shadow: 13px 13px 0px 0px #ffffff;
+            -webkit-box-shadow: 13px 13px 0px 0px #ffffff;
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5);
+          }
+
+          thead tr th {
+            min-width: 190px;
+          }
+          .dasboard-table {
+            overflow-y: auto;
+          }
+
+          .dasboard-table::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 8px;
+            height: 8px;
+          }
+
+          .dasboard-table::-webkit-scrollbar-thumb {
+            border-radius: 8px;
+            border: 1px solid white; /* should match background, can't be transparent */
+            background-color: rgba(0, 0, 0, 0.5);
+          }
+        `}
+      </style>
     </div>
   );
 };

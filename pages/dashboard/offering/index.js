@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/Layout/dashboard";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 import Table from "@/components/Dashboard/Offering/Table";
 import ModalStep from "@/components/Dashboard/Offering/ModalStep";
 import ModalOffering from "@/components/Dashboard/Offering/ModalOffering";
 import Header from "@/components/Dashboard/Common/Header";
 
-import { lockScroll } from "@/utils/index";
+import { lockScroll, get } from "@/utils/index";
 
-export async function getServerSideProps() {
-  const res = await axios.get(`http://api.vestrade.io/offerings`);
+export async function getServerSideProps ({ query }) {
+  let url = 'http://api.vestrade.io/offerings'
+  const tokenAddr = get(query, 'tokenAddr', '')
+  if (tokenAddr) {
+    url = `${url}?tokenAddr=${tokenAddr}`
+  }
+  const res = await axios.get(url);
   const offering = await res.data.data;
   return {
     props: {
@@ -19,24 +25,48 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Offering({ offering }) {
+export default function Offering ({ offering }) {
   const [modalStep, setModalStep] = useState(false);
   const [modalOffering, setModalOffering] = useState(false);
 
   const [initOffering, setInitOffering] = useState(offering);
 
+  console.log(offering, 123)
+  console.log(initOffering, 321)
+
+  const router = useRouter()
+  const tokenAddr = get(router, 'query.tokenAddr', '')
+
+  useEffect(() => {
+    setInitOffering(offering)
+  }, [offering])
+
+  const descHeader = () => {
+    if (!tokenAddr) return `Offerings for all token`
+    return `Offerings for token ${tokenAddr}`
+  }
+
+  const showButton = () => {
+    return tokenAddr ? 'Add new Offering' : null
+  }
+
+
+
   return (
     <DashboardLayout>
       <Header
-        btn="Add new Offering"
-        desc="Description about offering"
+        btn={showButton()}
+        desc={descHeader()}
         openModal={() => {
-          setModalStep(true);
+          setModalOffering(true);
           lockScroll(true);
         }}
         title="Offering"
       />
-      <Table offerings={initOffering} />
+      <Table
+        openStepModal={() => setModalStep(true)}
+        offerings={initOffering}
+      />
       {modalStep ? (
         <ModalStep
           closeModal={() => {
