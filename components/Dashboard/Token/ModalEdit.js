@@ -2,14 +2,13 @@ import React, { useState } from "react";
 
 import axios from "axios";
 
-import { get } from "@/utils/index";
+import { get, toast } from "@/utils/index";
 
 import Uploader from "@/components/Dashboard/Common/Uploader";
 import Input from "@/components/Common/Input";
 import Textarea from "@/components/Common/Textarea";
 import Button from "@/components/Common/Button";
 
-import { ToastContainer, toast } from "react-toastify";
 
 export default ({ token, updateTokens, closeModalEditToken }) => {
   const [name, setName] = useState(get(token, `name`, ``));
@@ -30,7 +29,7 @@ export default ({ token, updateTokens, closeModalEditToken }) => {
     const data = {
       address,
       businessOwnerName: `Elizabeth Olsen`,
-      businessOwnerAvatarUrl: `https://pic.element3ds.com/forum/201611/30/152859rzez4k6n645kxfzb.jpg`,
+      businessOwnerAvatarUrl: `https://3.bp.blogspot.com/-0WNZzIvLXCQ/T4OYV9EYaGI/AAAAAAAAFBM/sEUZ59ENuOA/s1600/just%2Bamy025_pp_Snapseed%25231.jpg`,
       businessOwnerBio: `10 tahun kerja di per-Joni-an`,
       prospectusUrl,
       thumbnailListUrl,
@@ -47,28 +46,12 @@ export default ({ token, updateTokens, closeModalEditToken }) => {
       .then((res) => {
         setLoading(false);
         updateTokens(res.data.data);
-        toast.success(`Token updated`, {
-          position: `top-right`,
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-        });
+        toast.success('Token updated');
         closeModalEditToken();
       })
       .catch((e) => {
         console.log(e);
-        toast.error(`Fail to update token`, {
-          position: `top-right`,
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-        });
+        toast.error('Fail to update token');
         closeModalEditToken();
         setLoading(true);
       });
@@ -90,17 +73,6 @@ export default ({ token, updateTokens, closeModalEditToken }) => {
 
   return (
     <div className="modal-dashboard">
-      <ToastContainer
-        autoClose={2500}
-        closeOnClick={false}
-        draggable={false}
-        hideProgressBar={false}
-        newestOnTop={false}
-        pauseOnFocusLoss={false}
-        pauseOnHover={false}
-        position="top-right"
-        rtl={false}
-      />
       <div
         className="modal-dashboard__overlay"
         onClick={() => _closeModalEditToken()}

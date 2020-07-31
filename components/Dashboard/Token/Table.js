@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { get, prettyBalance } from "@/utils/index";
 import { useEth } from "@/components/Layout/dashboard";
-
+import { useRouter } from "next/router";
 import VestradeERC20 from '@/contracts/Vestrade_ERC20.json'
 
-const TokenRow = ({token, index, setModalEditToken}) => {
+const TokenRow = ({ token, index, setModalEditToken }) => {
+  const router = useRouter()
   const { web3 } = useEth()
-
   const [totalSupply, setTotalSupply] = useState(null)
 
   useEffect(() => {
@@ -23,8 +23,13 @@ const TokenRow = ({token, index, setModalEditToken}) => {
     }
   }, [web3, token, totalSupply])
 
+
+
   return (
-    <tr className={index % 2 !== 0 ? `bg-gray-200` : ``} key={index}>
+    <tr
+      onClick={() => router.push(`/dashboard/offering?tokenAddr=${token.tokenAddr}`)}
+      className="hover:bg-gray-200 cursor-pointer" key={index}
+    >
       <td className="border-t px-6 py-4">
         {get(token, `symbol`, `-`)}
       </td>
@@ -33,9 +38,13 @@ const TokenRow = ({token, index, setModalEditToken}) => {
       </td>
       <td className="border-t font-bold px-6 py-4">{totalSupply}</td>
       <td className="border-t">
+
         <div
-          className="w-6 h-6 cursor-pointer"
-          onClick={() => setModalEditToken(token)}
+          className="w-8 h-8 cursor-pointer rounded-full flex items-center justify-center hover:bg-gray-400"
+          onClick={(e) => {
+            e.stopPropagation();
+            setModalEditToken(token)
+          }}
         >
           <img className="w-4 h-auto" src="/icon/edit.svg" />
         </div>
@@ -53,7 +62,7 @@ export default ({ tokens, setModalEditToken }) => {
             <th className="w-4/12 px-6 py-4 text-left">Token Symbol</th>
             <th className="w-4/12 px-6 py-4 text-left">Organization Name</th>
             <th className="w-4/12 px-6 py-4 text-left">Total Supply</th>
-            <th className="w-8"></th>
+            <th className=" w-12"></th>
           </tr>
         </thead>
         <tbody>
