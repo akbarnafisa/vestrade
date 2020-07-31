@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "@/components/Common/Input";
 import Button from "@/components/Common/Button";
+
 
 export default ({ closeModal }) => {
   const [name, setName] = useState(``);
@@ -55,7 +56,7 @@ export default ({ closeModal }) => {
           >
             Cancel
           </Button>
-          <Button className="w-full" type="btn-primary">
+          <Button className="w-full ml-2" type="btn-primary">
             Add New Offering
           </Button>
         </div>
