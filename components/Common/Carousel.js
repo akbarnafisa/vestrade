@@ -223,12 +223,6 @@ export default class Carousel extends Component {
               height: 100%;
               width: 100%;
             }
-            @media (max-width: 991px) {
-              .carousel__slide {
-                padding-right: 60px;
-                padding-left: 60px;
-              }
-            }
             .carousel__slide--active {
               display: block;
             }
