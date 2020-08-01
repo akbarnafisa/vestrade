@@ -108,8 +108,12 @@ const ProductDetail = ({ token = {}, openBuyModal }) => {
   const { web3, accounts, setAccounts } = useEth()
 
   const unlockWallet = async () => {
-    const accounts = await web3.eth.requestAccounts();
-    setAccounts(accounts);
+    try {
+      const accounts = await web3.eth.requestAccounts();
+      setAccounts(accounts);
+    } catch (err) {
+      alert('Install Metamask to continue')
+    }
   }
 
   return (
