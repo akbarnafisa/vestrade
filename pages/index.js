@@ -133,14 +133,14 @@ const HowTo = () => {
   ];
   return (
     <div className="how-to bg-purple-600 flex">
-      <div className="how-to-wrapper py-32 flex container mx-auto">
+      <div className="how-to-wrapper py-16 flex items-center container mx-auto">
         <div className="how-to__left w-1/3">
-          <div className="text-white mt-12 font-bold text-5xl ma">
+          <div className="text-white mt-8 font-bold text-5xl ma">
             How Vestrade
             <br />
             works ?
           </div>
-          <Link href="/">
+          <Link href="/launchpad">
             <a>
               <button className="text-white border-white border py-3 mt-20 px-6">
                 Try Vestrade Now
@@ -175,7 +175,7 @@ const Solution = () => {
     },
   ];
   return (
-    <div className="solution container mx-auto bg-white py-12 px-16 shadow-lg">
+    <div className="solution max-w-5xl mx-auto bg-white py-12 px-16 shadow-lg">
       <div className="font-bold text-3xl mb-12">
         Why Vestrade is your best
         <br />
@@ -207,15 +207,15 @@ const Solution = () => {
 
 const Launchpad = ({ tokens }) => {
   return (
-    <div className="launchpad pt-32 container mx-auto">
+    <div className="launchpad py-16 container mx-auto">
       <div className="flex flex-col items-center justify-center">
         <div className="font-bold text-3xl">Vestrade Launchpad</div>
-        <div className="w-5/12 text-center mt-4">
+        <div className="w-5/12 text-center mt-2">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Orci aliquet
           sed nunc enim lectus pharetra.
         </div>
       </div>
-      <div className="flex flex-wrap mt-12">
+      <div className="flex flex-wrap mt-8">
         {tokens.map((token, index) => (
           <div className="w-1/3" key={index + `card`}>
             <Card item={token} />
@@ -225,8 +225,8 @@ const Launchpad = ({ tokens }) => {
       <div className="w-full flex justify-center">
         <Link href="/launchpad">
           <a>
-            <Button className="mt-20" type="btn-ghost">
-              All Properties
+            <Button className="mt-8" type="btn-ghost">
+              All Assets
             </Button>
           </a>
         </Link>
@@ -270,7 +270,7 @@ const Map = () => {
 // Data for carousel
 
 export async function getStaticProps() {
-  const res = await axios.get(`http://api.vestrade.io/tokens`);
+  const res = await axios.get(`http://api.vestrade.io/launchpads?isActive=true`);
   const tokens = await res.data.data;
   return {
     props: {
@@ -284,9 +284,9 @@ export default function Home({ tokens = [] }) {
     <PageLayout>
       <div className="bg-gray-300">
         <Hero heroImage="images/landing/hero.svg" />
-        <Table />
-        <HowTo />
+        {/* <Table /> */}
         <Launchpad tokens={tokens.slice(0, 3)} />
+        <HowTo />
         <Solution />
         <Map />
       </div>
