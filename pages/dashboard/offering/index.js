@@ -7,6 +7,7 @@ import Table from "@/components/Dashboard/Offering/Table";
 import ModalStep from "@/components/Dashboard/Offering/ModalStep";
 import ModalOffering from "@/components/Dashboard/Offering/ModalOffering";
 import Header from "@/components/Dashboard/Common/Header";
+import { ToastContainer } from "react-toastify";
 
 import { lockScroll, get } from "@/utils/index";
 
@@ -51,6 +52,17 @@ export default function Offering ({ offering }) {
 
   return (
     <DashboardLayout>
+      <ToastContainer
+        autoClose={2500}
+        closeOnClick={false}
+        draggable={false}
+        hideProgressBar={false}
+        newestOnTop={false}
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        position="top-right"
+        rtl={false}
+      />
       <Header
         btn={showButton()}
         desc={descHeader()}

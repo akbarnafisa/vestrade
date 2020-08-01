@@ -8,7 +8,7 @@ const TxRow = ({ tx, idx }) => {
 
   useEffect(() => {
     const init = async () => {
-      const contract = getContract('VestradeERC20', tx.tokenAddr)
+      const contract = await getContract('VestradeERC20', tx.tokenAddr)
       const symbol = await contract.methods.symbol().call()
       setSymbol(symbol)
     }
