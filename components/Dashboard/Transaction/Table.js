@@ -1,5 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { formatDate, get, prettyBalance, prettyAddress } from "@/utils/index";
+import { useEth } from "@/components/Layout/dashboard";
+
+const TxRow = ({ tx, idx }) => {
+  const { web3, getContract } = useEth()
+  const [symbol, setSymbol] = useState(null)
+
+  useEffect(() => {
+    const init = async () => {
+      const contract = await getContract('VestradeERC20', tx.tokenAddr)
+      const symbol = await contract.methods.symbol().call()
+      setSymbol(symbol)
+    }
+
+    if (web3 && tx) {
+      init()
+    }
+  }, [web3, tx])
+
+  return (
+    <tr
+      className={idx % 2 !== 0 ? `bg-gray-200` : ``}
+      key={idx}
+    >
+      <td className="border-t px-6 py-4">
+        {prettyAddress(get(tx, `txId`, `-`))}
+      </td>
+      <td className="border-t px-6 py-4">
+        {prettyAddress(get(tx, `tokenAddr`, `-`))}
+      </td>
+      <td className="border-t px-6 py-4">
+        {prettyBalance(tx.tokens, 18, 6)} { symbol }
+      </td>
+      <td className="border-t px-6 py-4">
+        {prettyBalance(tx.amount, 18, 6)}
+      </td>
+      <td className="border-t px-6 py-4">
+        {prettyAddress(get(tx, `fromAddr`, `-`))}
+      </td>
+      <td className="border-t px-6 py-4">
+        {formatDate(
+          Number(get(tx, `timestamp`, 0)) * 1000,
+          `DD MMM YYYY`
+        )}
+      </td>
+    </tr>
+  )
+}
 
 export default ({ transactions }) => {
   return (
@@ -18,32 +65,9 @@ export default ({ transactions }) => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((trx, index) => {
+            {transactions.map((tx, index) => {
               return (
-                <tr
-                  className={index % 2 !== 0 ? `bg-gray-200` : ``}
-                  key={index}
-                >
-                  <td className="border-t px-6 py-4">
-                    {prettyAddress(get(trx, `txId`, `-`))}
-                  </td>
-                  <td className="border-t px-6 py-4">
-                    {prettyAddress(get(trx, `tokenAddr`, `-`))}
-                  </td>
-                  <td className="border-t px-6 py-4">{prettyBalance(trx.tokens)}</td>
-                  <td className="border-t px-6 py-4">
-                    {prettyBalance(trx.amount)}
-                  </td>
-                  <td className="border-t px-6 py-4">
-                    {prettyAddress(get(trx, `fromAddr`, `-`))}
-                  </td>
-                  <td className="border-t px-6 py-4">
-                    {formatDate(
-                      Number(get(trx, `timestamp`, 0)) * 1000,
-                      `DD MMM YYYY`
-                    )}
-                  </td>
-                </tr>
+                <TxRow tx={tx} idx={index} key={tx.id} />
               );
             })}
           </tbody>

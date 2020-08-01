@@ -5,7 +5,7 @@ export default function Hero({ heroImage }) {
     <div className="hero bg-purple-700 pb-32 flex">
       <div className="hero-wrapper mt-16 flex container mx-auto">
         <div className="hero__right w-full">
-          <div className="text-white font-bold text-6xl ">
+          <div className="text-white font-bold text-6xl leading-tight">
             Vestrade.
             <br />
             Invest, Trade, Easily.

@@ -27,7 +27,7 @@ const Client = ({ tokens }) => {
       let curTotalBalance = 0
       const getTokenBalance = tokens.map(token => {
         return new Promise(async (resolve, reject) => {
-          const tokenContract = getContract('VestradeERC20', token.tokenAddr)
+          const tokenContract = await getContract('VestradeERC20', token.tokenAddr)
           const balance = await tokenContract.methods.balanceOf(accounts[0]).call()
           if (JSBI.greaterThan(JSBI.BigInt(balance), JSBI.BigInt(0))) {
             const response = await axios.get(`http://api.vestrade.io/offerings?tokenAddr=${token.tokenAddr}&isActive=true`);

@@ -1,3 +1,6 @@
+.container {
+  @apply container px-16;
+}
 
 button:disabled {
   @apply bg-gray-500;
@@ -33,6 +36,13 @@ input:disabled {
   @apply text-purple-700;
 }
 
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+}
+
 .btn-secondary:not(:disabled):hover {
   @apply bg-gray-100;
 }
@@ -48,7 +58,7 @@ input:disabled {
 }
 
 .modal-dashboard {
-  @apply fixed top-0 left-0 min-h-screen min-w-full flex items-center justify-center z-10;
+  @apply fixed top-0 left-0 min-h-screen min-w-full flex items-center justify-center z-50;
 }
 
 .modal-dashboard .modal-dashboard__overlay {
