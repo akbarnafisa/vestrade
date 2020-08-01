@@ -269,7 +269,7 @@ const Map = () => {
 
 // Data for carousel
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res = await axios.get(`https://api.vestrade.io/launchpads?isActive=true`);
   const tokens = await res.data.data;
   return {
