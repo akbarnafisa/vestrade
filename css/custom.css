@@ -1,7 +1,3 @@
-.container {
-  @apply container px-16;
-}
-
 button:disabled {
   @apply bg-gray-500;
   cursor: not-allowed;

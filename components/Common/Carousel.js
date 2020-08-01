@@ -74,7 +74,7 @@ class CarouselSlide extends Component {
         <div className="font-semibold text-xl text-white mt-8">
           {this.props.slide.title}
         </div>
-        <div className="text-white mx-auto w-1/2">{this.props.slide.desc}</div>
+        <div className="text-white mx-auto w-full">{this.props.slide.desc}</div>
       </li>
     );
   }
@@ -271,10 +271,10 @@ export default class Carousel extends Component {
               opacity: 0.8;
             }
             .carousel__arrow--left {
-              left: 72px;
+              left: 0;
             }
             .carousel__arrow--right {
-              right: 72px;
+              right: 0;
             }
 
             .product__carousel .carousel__arrow--right {

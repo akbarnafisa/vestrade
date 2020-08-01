@@ -133,8 +133,8 @@ const HowTo = () => {
   ];
   return (
     <div className="how-to bg-purple-600 flex">
-      <div className="how-to-wrapper py-16 flex items-center container mx-auto">
-        <div className="how-to__left w-1/3">
+      <div className="how-to-wrapper py-16 flex flex-wrap items-center container mx-auto">
+        <div className="how-to__left w-full md:w-1/2">
           <div className="text-white mt-8 font-bold text-5xl ma">
             How Vestrade
             <br />
@@ -142,13 +142,13 @@ const HowTo = () => {
           </div>
           <Link href="/launchpad">
             <a>
-              <button className="text-white border-white border py-3 mt-20 px-6">
+              <button className="text-white border-white border py-3 mt-8 px-6">
                 Try Vestrade Now
               </button>
             </a>
           </Link>
         </div>
-        <div className="how-to-right w-2/3">
+        <div className="mt-8 md:mt-0 how-to-right w-full md:w-1/2">
           <Carousel slides={carouselSlidesData} />
         </div>
       </div>
@@ -175,19 +175,19 @@ const Solution = () => {
     },
   ];
   return (
-    <div className="solution max-w-5xl mx-auto bg-white py-12 px-16 shadow-lg">
-      <div className="font-bold text-3xl mb-12">
-        Why Vestrade is your best
-        <br />
-        solution
+    <div className="solution max-w-4xl mx-auto bg-white py-12 px-6 shadow-lg relative z-10" style={{
+      bottom: `-4rem`
+    }}>
+      <div className="font-bold text-3xl">
+        Why Vestrade is your best solution
       </div>
-      <div className="flex justify-between">
+      <div className="flex flex-wrap justify-between -mx-2">
         {items.map((item, index) => {
           return (
-            <div className="w-1/3" key={index}>
+            <div className="w-full md:w-1/3 pt-6 px-2" key={index}>
               <img className="w-16 h-16" src={item.icon} />
               <div className="font-semibold mt-8 mb-2">{item.title}</div>
-              <div className="mr-12">{item.desc}</div>
+              <div >{item.desc}</div>
             </div>
           );
         })}
@@ -210,14 +210,14 @@ const Launchpad = ({ tokens }) => {
     <div className="launchpad py-16 container mx-auto">
       <div className="flex flex-col items-center justify-center">
         <div className="font-bold text-3xl">Vestrade Launchpad</div>
-        <div className="w-5/12 text-center mt-2">
+        <div className="max-w-lg m-auto text-center mt-2">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Orci aliquet
           sed nunc enim lectus pharetra.
         </div>
       </div>
       <div className="flex flex-wrap mt-8">
         {tokens.map((token, index) => (
-          <div className="w-1/3" key={index + `card`}>
+          <div className="w-full md:w-1/3" key={index + `card`}>
             <Card item={token} />
           </div>
         ))}
@@ -238,9 +238,9 @@ const Launchpad = ({ tokens }) => {
 const Map = () => {
   return (
     <div className="map-wrapper bg-purple-600 w-full relative overflow-hidden">
-      <img alt="" className="absolute  w-2/3" src="images/landing/map.png" />
-      <div className="container w-full h-full flex flex-row-reverse  items-center mx-auto">
-        <div className="text-white text-4xl w-1/2 text-right flex flex-col items-end font-semibold">
+      <img alt="" className="absolute w-full h-full object-cover md:w-2/3" src="images/landing/map.png" />
+      <div className="container w-full h-full flex flex-row-reverse items-center mx-auto">
+        <div className="pt-8 text-white text-4xl w-full md:w-1/2 text-center md:text-right flex flex-col items-center md:items-end font-semibold">
           Our mission is to make investment affordable for everyone. We grow
           together with every Vestrade stakeholders.
           <div className="h-1 w-16 bg-white mt-6 mb-8" />
