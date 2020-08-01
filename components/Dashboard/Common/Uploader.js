@@ -50,7 +50,9 @@ export default function Uploader ({ label, onChange, onRemove, assets }) {
   // }
   const validateAssets = () => {
     const assetsIsString = typeof assets === `string`;
-    if (assetsIsString) {
+    const imgAsset = assetsIsString && assets.match(/\.(jpeg|jpg|gif|png)$/)
+    assets = imgAsset ? [assets] : assets
+    if (assetsIsString && !imgAsset) {
       if (!assets) return;
       const reg = /\.([0-9a-z]+)(?:[\?#]|$)/i;
       let ext;
