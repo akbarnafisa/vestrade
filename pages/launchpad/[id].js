@@ -36,22 +36,32 @@ const StockDetail = ({ token }) => {
           <div className="text-gray-700 mb-2">Total Saham</div>
           <div className="font-semibold">{prettyBalance(get(token, `supply`, `-`), 18, 8, true)} Lembar</div>
         </div>
-
-        <div className="mr-24">
-          <div className="text-gray-700 mb-2 mt-8">Min. Pembelian</div>
-          <div className="font-semibold">0 Lembar</div>
-        </div>
-
-        <div>
-          <div className="text-gray-700 mb-2 mt-8">Total Saham (Rp)</div>
-          <div className="font-semibold">600.000.000</div>
-        </div>
       </div>
     </div>
   );
 };
 
-const StockMarketStatus = () => {
+const StockMarketStatus = ({ offeringContract, token }) => {
+  const [balance, setBalance] = useState(null)
+  const [supply, setSupply] = useState(null)
+  const [rate, setRate] = useState(null)
+  const [availableToken, setAvailableToken] = useState(0)
+
+  useEffect(() => {
+    const init = async () => {
+      const newBalance = await offeringContract.methods.balance().call()
+      const newSupply = await offeringContract.methods.supply().call()
+      const newRate = 1 / get(token, `rate`, `-`)
+      setBalance(newBalance)
+      setSupply(newSupply)
+      setRate(newRate)
+      setAvailableToken(JSBI.divide(JSBI.multiply(JSBI.BigInt(newBalance), JSBI.BigInt(100)), JSBI.BigInt(newSupply)).toString())
+    }
+    if (offeringContract) {
+      init()
+    }
+  }, [offeringContract])
+
   return (
     <div className="w-3/5 ">
       <div className="ml-8 bg-white border border-gray-400 rounded overflow-hidden ">
@@ -62,38 +72,32 @@ const StockMarketStatus = () => {
           <div className="flex">
             <div className="mr-24">
               <div className="text-gray-700 mb-2">Saham Tersisa</div>
-              <div className="font-semibold">100%</div>
+              {
+                balance && supply && (
+                  <div className="font-semibold">{availableToken}%</div>
+                )
+              }
             </div>
 
             <div className="mr-24">
               <div className="text-gray-700 mb-2">Dalam Lembar</div>
-              <div className="font-semibold">6.000.000 Lembar</div>
+              {
+                balance && (
+                  <div className="font-semibold"> {prettyBalance(balance, 18, 8, true)} Lembar</div>
+                )
+              }
             </div>
 
             <div className="mr-24">
-              <div className="text-gray-700 mb-2">Dalam Rupiah</div>
-              <div className="font-semibold">6.000.000</div>
+              <div className="text-gray-700 mb-2">Dalam ETH</div>
+              {
+                balance && rate && (
+                  <div className="font-semibold">{prettyBalance(balance * rate, 18, 8, true)} ETH</div>
+                )
+              }
             </div>
           </div>
 
-          <div className=" border-t my-8 border-gray-400 w-full"></div>
-
-          <div className="flex">
-            <div className="mr-24">
-              <div className="text-gray-700 mb-2">Saham Terjual</div>
-              <div className="font-semibold">0%</div>
-            </div>
-
-            <div className="mr-24">
-              <div className="text-gray-700 mb-2">Dalam Lembar</div>
-              <div className="font-semibold">600.000 Lembar</div>
-            </div>
-
-            <div className="mr-24">
-              <div className="text-gray-700 mb-2">Dalam Rupiah</div>
-              <div className="font-semibold">600.000.000</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -316,7 +320,7 @@ const BuyModal = ({ closeBuyModal, token }) => {
   );
 }
 
-export async function getServerSideProps ({ params, preview = null }) {
+export async function getServerSideProps({ params, preview = null }) {
   const res = await axios.get(
     `http://api.vestrade.io/launchpads?addr=${params.id}`
   );
@@ -331,11 +335,23 @@ export async function getServerSideProps ({ params, preview = null }) {
 const Page = ({ token }) => {
   const { web3, setAccounts } = useEth()
   const [buyModal, setBuyModal] = useState(false)
+  const [offeringContract, setOfferingContract] = useState(null)
+  const [tokenContract, setTokenContract] = useState(null)
 
   useEffect(() => {
     const getAccounts = async () => {
       const accounts = await web3.eth.getAccounts()
+      const newOfferingContract = new web3.eth.Contract(
+        VestradeOffering.abi,
+        token.addr
+      )
+      const newTokenContract = new web3.eth.Contract(
+        VestradeERC20.abi,
+        token.tokenAddr
+      )
       setAccounts(accounts)
+      setOfferingContract(newOfferingContract)
+      setTokenContract(newTokenContract)
     }
     if (web3) {
       getAccounts()
@@ -376,14 +392,14 @@ const Page = ({ token }) => {
         />
         <div className="flex">
           <StockDetail token={token} />
-          <StockMarketStatus />
+          <StockMarketStatus offeringContract={offeringContract} token={token} />
         </div>
       </div>
     </div>
   )
 }
 
-export default function Home ({ token }) {
+export default function Home({ token }) {
   return (
     <PageLayout>
       <Page token={token} />
