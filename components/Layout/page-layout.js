@@ -15,7 +15,7 @@ import VestradeERC20Factory from '@/contracts/Vestrade_ERC20_Factory.json'
 export const EthContext = createContext();
 export const useEth = () => useContext(EthContext);
 
-function PageLayout({ children }) {
+function PageLayout ({ children }) {
   const [web3, setWeb3] = useState(null)
   const [accounts, setAccounts] = useState(null)
 
@@ -57,7 +57,7 @@ function PageLayout({ children }) {
     <EthContext.Provider value={value}>
       <div className="flex flex-col min-h-screen">
         <Nav />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 bg-gray-300">{children}</main>
         <Footer />
       </div>
     </EthContext.Provider>

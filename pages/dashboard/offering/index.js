@@ -27,11 +27,7 @@ export async function getServerSideProps ({ query }) {
 
 export default function Offering ({ offering }) {
   const [modalOffering, setModalOffering] = useState(false);
-
   const [initOffering, setInitOffering] = useState(offering);
-
-  console.log(offering, 123)
-  console.log(initOffering, 321)
 
   const router = useRouter()
   const tokenAddr = get(router, 'query.tokenAddr', '')
