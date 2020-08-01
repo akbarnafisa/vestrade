@@ -70,7 +70,7 @@ const Table = () => {
   ];
   return (
     <div className="hero-table relative mx-auto pb-32">
-      <div className="background absolute top-0 left-0 w-screen z-0 h-32 bg-purple-700"></div>
+      <div className="background absolute top-0 left-0 w-full z-0 h-32 bg-purple-700"></div>
       <div className="table-wrapper container px-16 mx-auto relative z-10">
         <table className="table-fixed bg-white w-full shadow rounded overflow-hidden">
           <thead>
@@ -237,7 +237,7 @@ const Launchpad = ({ tokens }) => {
 
 const Map = () => {
   return (
-    <div className="map-wrapper bg-purple-600 w-screen relative overflow-hidden">
+    <div className="map-wrapper bg-purple-600 w-full relative overflow-hidden">
       <img alt="" className="absolute  w-2/3" src="images/landing/map.png" />
       <div className="container w-full h-full flex flex-row-reverse  items-center mx-auto">
         <div className="text-white text-4xl w-1/2 text-right flex flex-col items-end font-semibold">

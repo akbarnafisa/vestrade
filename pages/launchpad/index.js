@@ -8,8 +8,8 @@ import Link from "next/link";
 
 const LaunchpadSlides = () => {
   return (
-    <div className=" relative mx-auto pb-24">
-      <div className="background absolute top-0 left-0 w-screen z-0 h-32 bg-purple-700"></div>
+    <div className=" relative mx-auto pt-16">
+      <div className="background absolute top-0 left-0 w-full z-0 h-40 bg-purple-700"></div>
       <div className="table-wrapper container px-16 mx-auto relative z-10">
         <div
           className="p-16 px-24 "
@@ -20,7 +20,7 @@ const LaunchpadSlides = () => {
             backgroundRepeat: `no-repeat`,
           }}
         >
-          <div className="w-2/3 text-6xl font-semibold mb-12">
+          <div className="w-2/3 text-6xl font-semibold mb-12 leading-tight">
             Get ready to join Vestrade Launchpad.
           </div>
           <Link href="/">
@@ -34,8 +34,8 @@ const LaunchpadSlides = () => {
 
 const Cards = ({ items = [] }) => {
   return (
-    <div className="launchpad container mx-auto pb-32">
-      <div className="flex justify-between px-8">
+    <div className="launchpad container mx-auto py-16">
+      {/* <div className="flex justify-between px-8">
         <div className="flex items-center ">
           <div className="font-semibold mr-4">Latest Property</div>
           <img src="icon/down.svg" />
@@ -48,9 +48,9 @@ const Cards = ({ items = [] }) => {
             type="text"
           />
         </div>
-      </div>
+      </div> */}
 
-      <div className="flex flex-wrap mt-12">
+      <div className="flex flex-wrap mt-8">
         {items.map((item, index) => (
           <div className="w-1/3" key={index + `card`}>
             <Card item={item} />
@@ -116,7 +116,7 @@ export default function Home({ tokens }) {
   return (
     <PageLayout>
       <div className="bg-gray-300">
-        <Hero heroImage="images/landing/hero-2.svg" />
+        {/* <Hero heroImage="images/landing/hero-2.svg" /> */}
         <LaunchpadSlides />
         <Cards items={tokens} />
       </div>
