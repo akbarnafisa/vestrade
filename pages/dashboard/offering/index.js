@@ -26,7 +26,6 @@ export async function getServerSideProps ({ query }) {
 }
 
 export default function Offering ({ offering }) {
-  const [modalStep, setModalStep] = useState(false);
   const [modalOffering, setModalOffering] = useState(false);
 
   const [initOffering, setInitOffering] = useState(offering);
@@ -50,8 +49,6 @@ export default function Offering ({ offering }) {
     return tokenAddr ? 'Add new Offering' : null
   }
 
-
-
   return (
     <DashboardLayout>
       <Header
@@ -64,17 +61,8 @@ export default function Offering ({ offering }) {
         title="Offering"
       />
       <Table
-        openStepModal={() => setModalStep(true)}
         offerings={initOffering}
       />
-      {modalStep ? (
-        <ModalStep
-          closeModal={() => {
-            setModalStep(false);
-            lockScroll(false);
-          }}
-        />
-      ) : null}
       {modalOffering ? (
         <ModalOffering
           closeModal={() => {

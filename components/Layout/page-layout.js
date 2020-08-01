@@ -7,12 +7,24 @@ import Footer from "../Navigation/Footer";
 
 import { getWeb3 } from "@/utils/index"
 
+import VestradeOffering from '@/contracts/Vestrade_Offering.json'
+import VestradeOfferingFactory from '@/contracts/Vestrade_Offering_Factory.json'
+import VestradeERC20 from '@/contracts/Vestrade_ERC20.json'
+import VestradeERC20Factory from '@/contracts/Vestrade_ERC20_Factory.json'
+
 export const EthContext = createContext();
 export const useEth = () => useContext(EthContext);
 
 function PageLayout({ children }) {
   const [web3, setWeb3] = useState(null)
   const [accounts, setAccounts] = useState(null)
+
+  const availableContracts = {
+    VestradeOffering: VestradeOffering,
+    VestradeOfferingFactory: VestradeOfferingFactory,
+    VestradeERC20: VestradeERC20,
+    VestradeERC20Factory: VestradeERC20Factory
+  }
 
   useEffect(() => {
     const initWeb3 = async () => {
@@ -31,7 +43,15 @@ function PageLayout({ children }) {
     }
   }, [web3])
 
-  const value = { web3, accounts, setAccounts }
+  const getContract = (name, addr) => {
+    const contract = new web3.eth.Contract(
+      availableContracts[name].abi,
+      addr
+    )
+    return contract
+  }
+
+  const value = { web3, accounts, setAccounts, getContract }
 
   return (
     <EthContext.Provider value={value}>

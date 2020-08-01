@@ -1,7 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Button from "@/components/Common/Button";
-export default ({ closeModal }) => {
+import { useEth } from "@/components/Layout/dashboard";
+import { useRouter } from "next/router";
+
+export default ({ closeModal, offering }) => {
+  const router = useRouter()
+  const { web3, accounts, getContract } = useEth()
+  const [step, setStep] = useState(1);
+  const [mintTokenStatus, setMintTokenStatus] = useState(null)
+  const [startStatus, setStartStatus] = useState(false)
+
+  useEffect(() => {
+    const init = async () => {
+      const offeringContract = getContract('VestradeOffering', offering.addr)
+      const latestMintStatus = await offeringContract.methods.mintStatus().call()
+      const latestIsStarted = await offeringContract.methods.offeringStatus().call()
+      if (latestMintStatus) {
+        setMintTokenStatus('confirmed')
+        setStep(2)
+      }
+      if (latestIsStarted) {
+        setMintTokenStatus('confirmed')
+        setStartStatus('confirmed')
+        setStep(2)
+      }
+    }
+
+    init()
+  }, [])
+
+  const mintToken = async () => {
+    const tokenAddr = router.query.tokenAddr
+    const tokenContract = getContract('VestradeERC20', tokenAddr)
+    tokenContract.methods.mint(offering.addr, offering.supply).send({
+      from: accounts[0]
+    })
+      .once('error', (error) => {
+        console.log(error)
+      })
+      .once('transactionHash', (transactionHash) => {
+        console.log(`tx hash ${transactionHash}`)
+        // alert.setMsg('Transaction success, minting will begin soon')
+        // alert.setShow(true)
+        setMintTokenStatus('pending')
+      })
+      .once('confirmation', (confirmationNumber, receipt) => {
+        // console.log(receipt.events)
+        setMintTokenStatus('confirmed')
+      })
+  }
+
+  const startOffering = async () => {
+    const offeringContract = getContract('VestradeOffering', offering.addr)
+    offeringContract.methods.startOffering().send({
+      from: accounts[0]
+    })
+      .once('error', (error) => {
+        console.log(error)
+      })
+      .once('transactionHash', (transactionHash) => {
+        console.log(`tx hash ${transactionHash}`)
+        // alert.setMsg('Transaction success, offering will begin soon')
+        // alert.setShow(true)
+        setStartStatus('pending')
+      })
+      .once('confirmation', (confirmationNumber, receipt) => {
+        // console.log(receipt.events)
+        setStartStatus('confirmed')
+      })
+  }
+
   const Stepper = ({
     active = 1,
     nameOfSteps = [`Name of Step 1`, `Name of Step 2`],
@@ -64,7 +133,7 @@ export default ({ closeModal }) => {
           >
             Cancel
           </Button>
-          <Button className="ml-2 w-full" type="btn-primary">
+          <Button disabled={mintTokenStatus === 'confirmed'} onClick={mintToken} className="ml-2 w-full" type="btn-primary">
             Mint
           </Button>
         </div>
@@ -74,7 +143,7 @@ export default ({ closeModal }) => {
   const SecondStep = () => {
     return (
       <div className="mt-8">
-        <div>SecondStep</div>
+        <div>Offering will be active once you click the start button</div>
         <div className="flex mt-8">
           <Button
             className="w-full"
@@ -83,15 +152,13 @@ export default ({ closeModal }) => {
           >
             Cancel
           </Button>
-          <Button className="ml-2 w-full" type="btn-primary">
-            Mint
+          <Button disabled={startStatus === 'confirmed'} onClick={startOffering} className="ml-2 w-full" type="btn-primary">
+            Start
           </Button>
         </div>
       </div>
     );
   };
-
-  const [step, setStep] = useState(1);
 
   return (
     <div className="fixed top-0 left-0 min-h-screen min-w-full flex items-center justify-center">
