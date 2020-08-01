@@ -108,8 +108,12 @@ const ProductDetail = ({ token = {}, openBuyModal }) => {
   const { web3, accounts, setAccounts } = useEth()
 
   const unlockWallet = async () => {
-    const accounts = await web3.eth.requestAccounts();
-    setAccounts(accounts);
+    try {
+      const accounts = await web3.eth.requestAccounts();
+      setAccounts(accounts);
+    } catch (err) {
+      alert('Install Metamask to continue')
+    }
   }
 
   return (
@@ -322,7 +326,7 @@ const BuyModal = ({ closeBuyModal, token }) => {
 
 export async function getServerSideProps({ params, preview = null }) {
   const res = await axios.get(
-    `http://api.vestrade.io/launchpads?addr=${params.id}`
+    `https://api.vestrade.io/launchpads?addr=${params.id}`
   );
   const token = await res.data.data[0];
   return {

@@ -6,7 +6,7 @@ import JSBI from "jsbi";
 import { prettyBalance, prettyAddress } from "@/utils/index";
 
 export async function getServerSideProps () {
-  const res = await axios.get(`http://api.vestrade.io/tokens`);
+  const res = await axios.get(`https://api.vestrade.io/tokens`);
   const tokens = await res.data.data;
   return {
     props: {
@@ -91,10 +91,10 @@ const Client = ({ tokens }) => {
       let curTotalBalance = 0
       const getTokenBalance = tokens.map(token => {
         return new Promise(async (resolve, reject) => {
-          const tokenContract = getContract('VestradeERC20', token.tokenAddr)
+          const tokenContract = await getContract('VestradeERC20', token.tokenAddr)
           const balance = await tokenContract.methods.balanceOf(accounts[0]).call()
           if (JSBI.greaterThan(JSBI.BigInt(balance), JSBI.BigInt(0))) {
-            const response = await axios.get(`http://api.vestrade.io/offerings?tokenAddr=${token.tokenAddr}&isActive=true`);
+            const response = await axios.get(`https://api.vestrade.io/offerings?tokenAddr=${token.tokenAddr}&isActive=true`);
             const latestOffering = response.data.data[response.data.data.length - 1]
             const balanceInETH = balance * (1 / latestOffering.rate)
             token.balance = balance
@@ -114,9 +114,9 @@ const Client = ({ tokens }) => {
         return token
       })
 
-      const newTxList = await axios.get(`http://api.vestrade.io/transactions?fromAddr=${accounts[0].toLowerCase()}`);
+      const newTxList = await axios.get(`https://api.vestrade.io/transactions?fromAddr=${accounts[0].toLowerCase()}`);
 
-      // console.log(userOwnedTokens)
+      console.log(userOwnedTokens)
       setTotalBalance(curTotalBalance)
       setOwnedTokens(userOwnedTokens)
       setTxList(newTxList.data.data)

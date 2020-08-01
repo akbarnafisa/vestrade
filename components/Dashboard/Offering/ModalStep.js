@@ -13,7 +13,7 @@ export default ({ closeModal, offering }) => {
 
   useEffect(() => {
     const init = async () => {
-      const offeringContract = getContract('VestradeOffering', offering.addr)
+      const offeringContract = await getContract('VestradeOffering', offering.addr)
       const latestMintStatus = await offeringContract.methods.mintStatus().call()
       const latestIsStarted = await offeringContract.methods.offeringStatus().call()
       if (latestMintStatus) {
@@ -32,7 +32,7 @@ export default ({ closeModal, offering }) => {
 
   const mintToken = async () => {
     const tokenAddr = router.query.tokenAddr
-    const tokenContract = getContract('VestradeERC20', tokenAddr)
+    const tokenContract = await getContract('VestradeERC20', tokenAddr)
     tokenContract.methods.mint(offering.addr, offering.supply).send({
       from: accounts[0]
     })
@@ -52,7 +52,7 @@ export default ({ closeModal, offering }) => {
   }
 
   const startOffering = async () => {
-    const offeringContract = getContract('VestradeOffering', offering.addr)
+    const offeringContract = await getContract('VestradeOffering', offering.addr)
     offeringContract.methods.startOffering().send({
       from: accounts[0]
     })

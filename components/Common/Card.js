@@ -10,7 +10,7 @@ export default function Card({ item }) {
   };
   return (
     <div className="p-3 pb-8 cursor-pointer no-underline font-normal">
-      <Link href={`/launchpad/${get(item, `addr`, ``)}`}>
+      <Link href="/launchpad/[id]" as={`/launchpad/${get(item, `addr`, ``)}`}>
         <a className="shadow-lg block bg-white rounded overflow-hidden font-normal no-underline">
           <div
             className="w-full h-48"
@@ -26,16 +26,18 @@ export default function Card({ item }) {
               <div className="font-semibold mr-4">{get(item.detail, `name`, ``)} </div>
               <div className="text-grey-300">{get(item.detail, `symbol`, ``)}</div>
             </div>
-            <div className="flex mb-4">
-              <img src="icon/location.svg" />
-              <div className="text-gray-900 text-sm ml-3">
-                {get(item.detail, `address`, `-`)}
+            <div className="mb-4 relative pb-12">
+              <div className="flex absolute">
+                <img src="icon/location.svg" />
+                <div className="text-gray-900 text-sm ml-3 line-clamp-2">
+                  {get(item.detail, `address`, `-`)}
+                </div>
               </div>
             </div>
             <div>
               <div className="text-xs text-gray-900 mb-1">Token Price</div>
               <div className="font-semibold">
-                {1/item.rate} ETH
+                {1 / item.rate} ETH
                 {/* 2,733 BTC */}
               </div>
             </div>

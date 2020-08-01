@@ -55,7 +55,7 @@ export default ({ token, updateTokens, closeModalEditToken }) => {
     setLoading(true);
 
     axios
-      .put(`http://api.vestrade.io/tokens/${tokenAddress}`, data, config)
+      .put(`https://api.vestrade.io/tokens/${tokenAddress}`, data, config)
       .then((res) => {
         setLoading(false);
         updateTokens(res.data.data);

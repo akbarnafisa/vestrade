@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { get } from "@/utils/index";
 
 export async function getServerSideProps ({ query }) {
-  let url = 'http://api.vestrade.io/transactions'
+  let url = 'https://api.vestrade.io/transactions'
   const tokenAddr = get(query, 'tokenAddr', '')
   if (tokenAddr) {
     url = `${url}?tokenAddr=${tokenAddr}`

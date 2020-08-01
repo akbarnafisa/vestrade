@@ -47,7 +47,16 @@ function PageLayout({ children }) {
     }
   }, [web3])
 
-  const getContract = (name, addr) => {
+  const getContract = async (name, addr) => {
+    if (name.includes('Factory')) {
+      const networkId = await web3.eth.net.getId();
+      const deployedNetwork = availableContracts[name].networks[networkId];
+      const instance = new web3.eth.Contract(
+        availableContracts[name].abi,
+        deployedNetwork && deployedNetwork.address,
+      )
+      return instance
+    }
     const contract = new web3.eth.Contract(
       availableContracts[name].abi,
       addr

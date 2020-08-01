@@ -3,7 +3,7 @@ import Dropzone from "react-dropzone-uploader";
 
 export default function Uploader ({ label, onChange, onRemove, assets }) {
   const getUploadParams = ({ file }) => {
-    const url = `http://api.vestrade.io/upload`;
+    const url = `https://api.vestrade.io/upload`;
     const body = new FormData();
     body.append(`file`, file);
     return {
