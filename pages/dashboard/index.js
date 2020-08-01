@@ -12,7 +12,7 @@ import { lockScroll } from "@/utils/index";
 import { ToastContainer } from "react-toastify";
 
 export async function getServerSideProps() {
-  const res = await axios.get(`http://api.vestrade.io/tokens`);
+  const res = await axios.get(`https://api.vestrade.io/tokens`);
   const tokens = await res.data.data;
   return {
     props: {

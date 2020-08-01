@@ -12,7 +12,7 @@ import { ToastContainer } from "react-toastify";
 import { lockScroll, get } from "@/utils/index";
 
 export async function getServerSideProps ({ query }) {
-  let url = 'http://api.vestrade.io/offerings'
+  let url = 'https://api.vestrade.io/offerings'
   const tokenAddr = get(query, 'tokenAddr', '')
   if (tokenAddr) {
     url = `${url}?tokenAddr=${tokenAddr}`

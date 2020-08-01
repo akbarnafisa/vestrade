@@ -326,7 +326,7 @@ const BuyModal = ({ closeBuyModal, token }) => {
 
 export async function getServerSideProps({ params, preview = null }) {
   const res = await axios.get(
-    `http://api.vestrade.io/launchpads?addr=${params.id}`
+    `https://api.vestrade.io/launchpads?addr=${params.id}`
   );
   const token = await res.data.data[0];
   return {
