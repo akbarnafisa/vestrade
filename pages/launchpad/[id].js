@@ -22,19 +22,22 @@ import VestradeOffering from "@/contracts/Vestrade_Offering.json";
 
 const StockDetail = ({ token }) => {
   return (
-    <div className="bg-white border border-gray-400 w-2/5 rounded overflow-hidden">
-      <div className="bg-purple-700 text-white text-center text-sm font-semibold py-3">
-        Stock Detail
-      </div>
-      <div className="flex flex-wrap py-4 px-8">
-        <div className="mr-24">
-          <div className="text-gray-700 mb-2">Harga Saham</div>
-          <div className="font-semibold">{1 / get(token, `rate`, `-`)} ETH</div>
+    <div className="w-full lg:w-2/5 rounded overflow-hidden mt-6 px-4">
+      <div className="bg-white border border-gray-400">
+        <div className="bg-purple-700 text-white text-center text-sm font-semibold py-3">
+          Stock Detail
         </div>
-
-        <div>
-          <div className="text-gray-700 mb-2">Total Saham</div>
-          <div className="font-semibold">{prettyBalance(get(token, `supply`, `-`), 18, 8, true)} Lembar</div>
+        <div className="px-4 pb-4">
+          <div className="flex flex-wrap -mx-4">
+            <div className="w-full md:w-1/2 pt-4 px-4">
+              <div className="text-gray-700 mb-2">Harga Saham</div>
+              <div className="font-semibold">{1 / get(token, `rate`, `-`)} ETH</div>
+            </div>
+            <div className="w-full md:w-1/2 pt-4 px-4">
+              <div className="text-gray-700 mb-2">Total Saham</div>
+              <div className="font-semibold">{prettyBalance(get(token, `supply`, `-`), 18, 8, true)} Lembar</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -63,14 +66,14 @@ const StockMarketStatus = ({ offeringContract, token }) => {
   }, [offeringContract])
 
   return (
-    <div className="w-3/5 ">
-      <div className="ml-8 bg-white border border-gray-400 rounded overflow-hidden ">
+    <div className="w-full lg:w-3/5 mt-6 px-4">
+      <div className="bg-white border border-gray-400 rounded overflow-hidden ">
         <div className="bg-purple-700 text-white text-center text-sm font-semibold py-3">
           Stock Market Status
         </div>
-        <div className="py-4 px-8">
-          <div className="flex">
-            <div className="mr-24">
+        <div className="px-4 pb-4">
+          <div className="flex flex-wrap justify-between -mx-4">
+            <div className="w-full md:w-1/3 pt-4 px-4">
               <div className="text-gray-700 mb-2">Saham Tersisa</div>
               {
                 balance && supply && (
@@ -78,8 +81,7 @@ const StockMarketStatus = ({ offeringContract, token }) => {
                 )
               }
             </div>
-
-            <div className="mr-24">
+            <div className="w-full md:w-1/3 pt-4 px-4">
               <div className="text-gray-700 mb-2">Dalam Lembar</div>
               {
                 balance && (
@@ -87,8 +89,7 @@ const StockMarketStatus = ({ offeringContract, token }) => {
                 )
               }
             </div>
-
-            <div className="mr-24">
+            <div className="w-full md:w-1/3 pt-4 px-4">
               <div className="text-gray-700 mb-2">Dalam ETH</div>
               {
                 balance && rate && (
@@ -117,15 +118,17 @@ const ProductDetail = ({ token = {}, openBuyModal }) => {
   }
 
   return (
-    <div className="product border rounded mb-4 border-gray-400 flex items-center bg-white">
-      <div className="w-2/5 bg-grey-900 h-full">
+    <div className="product border rounded border-gray-400 flex flex-wrap items-center bg-white">
+      <div className="w-full lg:w-2/5 bg-grey-900 h-full" style={{
+        height: `350px`
+      }}>
         <Carousel
           className="product__carousel"
           slides={get(token.detail, `thumbnailListUrl`, [])}
           type="product"
         />
       </div>
-      <div className="product__detail w-3/5 bg-white pt-8 pb-9 px-12">
+      <div className="product__detail w-full lg:w-3/5 bg-white pt-8 pb-9 px-12">
         <div className="flex items-center mb-3">
           <div className="text-bold  text-3xl font-bold">
             {get(token.detail, `name`, `-`)}
@@ -134,31 +137,28 @@ const ProductDetail = ({ token = {}, openBuyModal }) => {
             {get(token.detail, `symbol`, `-`)}
           </div>
         </div>
-        {/* <div className="text-gray-600 mb-4">
-          PT BFC Ayam Indonesia
-        </div> */}
         <div className="flex items-center">
           <img alt="" className="w-6 h-auto" src="/icon/location.svg" />
           <div className="ml-2">{get(token.detail, `address`, `-`)}</div>
         </div>
-        <div className=" border-t my-8 border-gray-400 w-full"></div>
-        <div className="flex justify-between">
-          <div className="flex items-center">
-            <div className=" w-12 h-12 rounded-full overflow-hidden  mr-4">
-              <img
-                alt=""
-                className="w-12 h-12"
-                src={get(token.detail, `businessOwner.avatarUrl`, ``)}
-              />
-            </div>
-            <div>
-              <div className=" text-sm text-gray-900">Bussiness Owner</div>
-              <div className="font-semibold">
-                {get(token.detail, `businessOwner.name`, ``)}
-              </div>
-            </div>
+        <div className="w-full flex items-center mt-6">
+          <div className=" w-12 h-12 rounded-full overflow-hidden  mr-4">
+            <img
+              alt=""
+              className="w-12 h-12"
+              src={get(token.detail, `businessOwner.avatarUrl`, ``)}
+            />
           </div>
           <div>
+            <div className=" text-sm text-gray-900">Business Owner</div>
+            <div className="font-semibold">
+              {get(token.detail, `businessOwner.name`, ``)}
+            </div>
+          </div>
+        </div>
+        <div className="mt-6 border-t border-gray-400 w-full"></div>
+        <div className="flex flex-wrap justify-between">
+          <div className="w-full sm:w-1/2 pt-6">
             <Button
               disabled={!get(token, 'detail.prospectusUrl', ``)}
               onClick={() =>
@@ -172,6 +172,8 @@ const ProductDetail = ({ token = {}, openBuyModal }) => {
             >
               Download Perspektus
             </Button>
+          </div>
+          <div className="w-full sm:w-1/2 pt-6">
             {
               (accounts && accounts[0]) ? (
                 <Button onClick={openBuyModal} className="mr-4" type="btn-primary">
@@ -186,12 +188,6 @@ const ProductDetail = ({ token = {}, openBuyModal }) => {
           </div>
         </div>
       </div>
-      <style jsx>{`
-        .product {
-          height: 100vh;
-          max-height: 350px;
-        }
-      `}</style>
     </div>
   );
 };
@@ -394,7 +390,7 @@ const Page = ({ token }) => {
           openBuyModal={() => { setBuyModal(true) }}
           token={token}
         />
-        <div className="flex">
+        <div className="flex flex-wrap -mx-4">
           <StockDetail token={token} />
           <StockMarketStatus offeringContract={offeringContract} token={token} />
         </div>

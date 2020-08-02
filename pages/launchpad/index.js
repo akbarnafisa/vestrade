@@ -10,9 +10,9 @@ const LaunchpadSlides = () => {
   return (
     <div className=" relative mx-auto pt-16">
       <div className="background absolute top-0 left-0 w-full z-0 h-40 bg-purple-700"></div>
-      <div className="table-wrapper container px-16 mx-auto relative z-10">
+      <div className="table-wrapper container mx-auto relative z-10">
         <div
-          className="p-16 px-24 "
+          className="p-6 md:p-12"
           style={{
             backgroundImage: `url(images/landing/launchpad-slide.png)`,
             backgroundPosition: `center`,
@@ -20,11 +20,11 @@ const LaunchpadSlides = () => {
             backgroundRepeat: `no-repeat`,
           }}
         >
-          <div className="w-2/3 text-6xl font-semibold mb-12 leading-tight">
+          <div className="w-2/3 text-3xl md:text-5xl font-semibold leading-tight">
             Get ready to join Vestrade Launchpad.
           </div>
           <Link href="/">
-            <a className="text-3xl font-normal ">Verify your account now!</a>
+            <a className="text-2xl font-normal mt-8 inline-block">Verify your account now!</a>
           </Link>
         </div>
       </div>
@@ -52,7 +52,7 @@ const Cards = ({ items = [] }) => {
 
       <div className="flex flex-wrap mt-8">
         {items.map((item, index) => (
-          <div className="w-1/3" key={index + `card`}>
+          <div className="w-full md:w-1/3" key={index + `card`}>
             <Card item={item} />
           </div>
         ))}
@@ -112,7 +112,6 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ tokens }) {
-  console.log(tokens)
   return (
     <PageLayout>
       <div className="bg-gray-300">
