@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Input from "@/components/Common/Input";
 import Button from "@/components/Common/Button";
-import { useEth } from "@/components/Layout/dashboard";
+import { useEth } from "@/components/Layout/main";
 import { toast } from "@/utils/index";
 
 

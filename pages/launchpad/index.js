@@ -12,7 +12,7 @@ const LaunchpadSlides = () => {
       <div className="background absolute top-0 left-0 w-full z-0 h-40 bg-purple-700"></div>
       <div className="table-wrapper container mx-auto relative z-10">
         <div
-          className="p-6 md:p-12"
+          className="p-6 md:p-12 bg-gray-100"
           style={{
             backgroundImage: `url(images/landing/launchpad-slide.png)`,
             backgroundPosition: `center`,

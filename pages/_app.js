@@ -1,33 +1,34 @@
-import "../css/index.css";
-import "react-dropzone-uploader/dist/styles.css";
-import "react-toastify/dist/ReactToastify.css";
+import "../css/index.css"
+import "react-dropzone-uploader/dist/styles.css"
+import "react-toastify/dist/ReactToastify.css"
 
-import App from "next/app";
-import Head from "next/head";
-import Router from "next/router";
-import React from "react";
-import ReactGA from "react-ga";
+import App from "next/app"
+import Head from "next/head"
+import Router from "next/router"
+import React from "react"
+import ReactGA from "react-ga"
 
-import NProgress from "nprogress"; //nprogress module
-import "nprogress/nprogress.css"; //styles of nprogress
+import NProgress from "nprogress" //nprogress module
+import "nprogress/nprogress.css" //styles of nprogress
+import Main from '@/components/Layout/main'
 
-const SEO_TITLE = `Vestrade`;
-const SEO_DESCRIPTION = `Vestrade`;
+const SEO_TITLE = `Vestrade`
+const SEO_DESCRIPTION = `Vestrade`
 
-Router.events.on(`routeChangeComplete`, (url) => ReactGA.pageview(url));
+Router.events.on(`routeChangeComplete`, (url) => ReactGA.pageview(url))
 
-Router.events.on(`routeChangeStart`, () => NProgress.start());
-Router.events.on(`routeChangeComplete`, () => NProgress.done());
-Router.events.on(`routeChangeError`, () => NProgress.done());
+Router.events.on(`routeChangeStart`, () => NProgress.start())
+Router.events.on(`routeChangeComplete`, () => NProgress.done())
+Router.events.on(`routeChangeError`, () => NProgress.done())
 
 class MyApp extends App {
   componentDidMount() {
-    ReactGA.initialize(`UA-111515120-4`);
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.initialize(`UA-111515120-4`)
+    ReactGA.pageview(window.location.pathname + window.location.search)
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps } = this.props
 
     return (
       <>
@@ -40,10 +41,12 @@ class MyApp extends App {
             name="description"
           />
         </Head>
-        <Component {...pageProps} />
+        <Main>
+          <Component {...pageProps} />
+        </Main>
       </>
-    );
+    )
   }
 }
 
-export default MyApp;
+export default MyApp

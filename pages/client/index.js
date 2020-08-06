@@ -1,47 +1,47 @@
-import PageLayout from "@/components/Layout/page-layout";
-import { useEth } from "@/components/Layout/page-layout";
-import { useEffect, useState } from "react";
-import axios from 'axios';
-import JSBI from "jsbi";
-import { prettyBalance, prettyAddress, formatDate, get, } from "@/utils/index";
+import PageLayout from "@/components/Layout/page-layout"
+import { useEth } from "@/components/Layout/main"
+import { useEffect, useState } from "react"
+import axios from 'axios'
+import JSBI from "jsbi"
+import { prettyBalance, prettyAddress, formatDate, get, } from "@/utils/index"
 
 
-export async function getServerSideProps () {
-  const res = await axios.get(`https://api.vestrade.io/tokens`);
-  const tokens = await res.data.data;
+export async function getServerSideProps() {
+  const res = await axios.get(`https://api.vestrade.io/tokens`)
+  const tokens = await res.data.data
   return {
     props: {
       tokens,
     },
-  };
+  }
 }
 
 const TokenTable = ({ accounts, ownedTokens, totalBalance }) => {
   return (
     <div className="container mx-auto max-w-4xl mt-4">
-      <div className="flex">
-        <div className="bg-white flex flex-col justify-center mx-4 p-6 rounded w-1/2 shadow-md">
+      <div className="flex justify-center">
+        <div className="bg-white w-56 h-56 rounded-full overflow-hidden flex flex-col justify-center p-6 shadow-md text-center">
           <div className="font-semibold text-gray-700">
-            Account
+            Portfolio Total
           </div>
-          <div className="font-semibold text-xl">
-            {
-              prettyAddress(accounts[0])
-            }
-          </div>
-        </div>
-        <div className="bg-white flex flex-col justify-center mx-4 p-6 rounded w-1/2 shadow-md">
-          <div className="font-semibold text-gray-700">
-            Total
-          </div>
-          <div className="font-semibold text-3xl">
-            {prettyBalance(totalBalance, 18, 4)} ETH
+          <div className="font-semibold text-3xl flex items-center justify-center">
+            <span>{prettyBalance(totalBalance, 18, 4)}</span>
+            <div className="pl-2">
+              <svg width="10" height="17" viewBox="0 0 10 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.88916 11.1394L4.99834 11.2483L9.99685 8.29374L4.99834 0L4.88916 0.371093V11.1394Z" fill="#343434" />
+                <path d="M4.99851 11.2484V0L0 8.29374L4.99851 11.2484Z" fill="#8C8C8C" />
+                <path d="M4.93701 16.1057L4.99853 16.2854L10.0001 9.2417L4.99857 12.1948L4.93705 12.2698L4.93701 16.1057Z" fill="#3C3C3B" />
+                <path d="M0 9.2417L4.99851 16.2854V12.1948L0 9.2417Z" fill="#8C8C8C" />
+                <path d="M4.99854 6.02173V11.2482L9.99697 8.29368L4.99854 6.02173Z" fill="#141414" />
+                <path d="M4.99843 6.02173L0 8.29364L4.99843 11.2482V6.02173Z" fill="#393939" />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
       <div className="dasboard-table relative mx-auto mt-12 mb-8">
         <div className=" text-3xl font-semibold mb-4">
-          Owned Token
+          Token Holdings
         </div>
         <table className="table-fixed bg-white w-full shadow rounded overflow-hidden">
           <thead>
@@ -129,7 +129,7 @@ const TransactionTable = ({ transactions }) => {
                       )}
                     </td>
                   </tr>
-                );
+                )
               })}
             </tbody>
           </table>
@@ -189,7 +189,7 @@ const Client = ({ tokens }) => {
           const tokenContract = await getContract('VestradeERC20', token.tokenAddr)
           const balance = await tokenContract.methods.balanceOf(accounts[0]).call()
           if (JSBI.greaterThan(JSBI.BigInt(balance), JSBI.BigInt(0))) {
-            const response = await axios.get(`https://api.vestrade.io/offerings?tokenAddr=${token.tokenAddr}&isActive=true`);
+            const response = await axios.get(`https://api.vestrade.io/offerings?tokenAddr=${token.tokenAddr}&isActive=true`)
             const latestOffering = response.data.data[response.data.data.length - 1]
             const balanceInETH = balance * (1 / latestOffering.rate)
             token.balance = balance
@@ -209,12 +209,13 @@ const Client = ({ tokens }) => {
         return token
       })
 
-      const newTxList = await axios.get(`https://api.vestrade.io/transactions?fromAddr=${accounts[0].toLowerCase()}`);
+      const newTxList = await axios.get(`https://api.vestrade.io/transactions?fromAddr=${accounts[0].toLowerCase()}`)
 
       console.log(userOwnedTokens)
       setTotalBalance(curTotalBalance)
       setOwnedTokens(userOwnedTokens)
       setTxList(newTxList.data.data)
+      setIsLoggedIn(true)
     }
 
     if (web3 && accounts && accounts[0]) {
@@ -265,7 +266,7 @@ const Client = ({ tokens }) => {
   )
 }
 
-export default function ClientPage ({ tokens }) {
+export default function ClientPage({ tokens }) {
   return (
     <PageLayout>
       <Client tokens={tokens} />

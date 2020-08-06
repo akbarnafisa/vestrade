@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Input from "@/components/Common/Input";
 import Button from "@/components/Common/Button";
-import { useEth } from "@/components/Layout/dashboard";
+import { useEth } from "@/components/Layout/main";
 import { useRouter } from "next/router";
 import JSBI from "jsbi";
 import { toast } from "@/utils/index";

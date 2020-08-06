@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { formatDate, get, prettyAddress, prettyBalance } from "@/utils/index";
 import VestradeOffering from "@/contracts/Vestrade_Offering.json";
-import { useEth } from "@/components/Layout/dashboard";
+import { useEth } from "@/components/Layout/main";
 import { useRouter } from "next/router";
 import ModalStep from "./ModalStep";
 

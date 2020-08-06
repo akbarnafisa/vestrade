@@ -14,7 +14,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: [`SpaceGrotesk`, ...defaultTheme.fontFamily.sans],
+        sans: [`Jost`, `SpaceGrotesk`, ...defaultTheme.fontFamily.sans],
       },
       margin: {
         9: `2.25rem`,

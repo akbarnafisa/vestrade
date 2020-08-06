@@ -16,7 +16,7 @@ import axios from "axios";
 import JSBI from 'jsbi'
 
 import Button from "@/components/Common/Button";
-import { useEth } from "@/components/Layout/page-layout";
+import { useEth } from "@/components/Layout/main";
 import VestradeERC20 from "@/contracts/Vestrade_ERC20.json";
 import VestradeOffering from "@/contracts/Vestrade_Offering.json";
 
@@ -145,7 +145,7 @@ const ProductDetail = ({ token = {}, openBuyModal }) => {
           <div className=" w-12 h-12 rounded-full overflow-hidden  mr-4">
             <img
               alt=""
-              className="w-12 h-12"
+              className="w-12 h-12 object-cover"
               src={get(token.detail, `businessOwner.avatarUrl`, ``)}
             />
           </div>
@@ -340,7 +340,8 @@ const Page = ({ token }) => {
 
   useEffect(() => {
     const getAccounts = async () => {
-      const accounts = await web3.eth.getAccounts()
+      // const accounts = await web3.eth.getAccounts()
+      // setAccounts(accounts)
       const newOfferingContract = new web3.eth.Contract(
         VestradeOffering.abi,
         token.addr
@@ -349,7 +350,6 @@ const Page = ({ token }) => {
         VestradeERC20.abi,
         token.tokenAddr
       )
-      setAccounts(accounts)
       setOfferingContract(newOfferingContract)
       setTokenContract(newTokenContract)
     }

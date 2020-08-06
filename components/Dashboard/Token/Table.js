@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { get, prettyBalance } from "@/utils/index";
-import { useEth } from "@/components/Layout/dashboard";
+import { useEth } from "@/components/Layout/main";
 import { useRouter } from "next/router";
 import VestradeERC20 from '@/contracts/Vestrade_ERC20.json'
 

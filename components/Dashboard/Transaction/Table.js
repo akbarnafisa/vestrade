@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { formatDate, get, prettyBalance, prettyAddress } from "@/utils/index";
-import { useEth } from "@/components/Layout/dashboard";
+import { useEth } from "@/components/Layout/main";
 
 const TxRow = ({ tx, idx }) => {
   const { web3, getContract } = useEth()
