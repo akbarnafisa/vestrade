@@ -3,7 +3,8 @@ import { useEth } from "@/components/Layout/page-layout";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import JSBI from "jsbi";
-import { prettyBalance, prettyAddress } from "@/utils/index";
+import { prettyBalance, prettyAddress, formatDate, get, } from "@/utils/index";
+
 
 export async function getServerSideProps () {
   const res = await axios.get(`https://api.vestrade.io/tokens`);
@@ -15,7 +16,7 @@ export async function getServerSideProps () {
   };
 }
 
-const Table = ({ accounts, ownedTokens, totalBalance }) => {
+const TokenTable = ({ accounts, ownedTokens, totalBalance }) => {
   return (
     <div className="container mx-auto max-w-4xl mt-4">
       <div className="flex">
@@ -38,7 +39,10 @@ const Table = ({ accounts, ownedTokens, totalBalance }) => {
           </div>
         </div>
       </div>
-      <div className="dasboard-table relative mx-auto my-8">
+      <div className="dasboard-table relative mx-auto mt-12 mb-8">
+        <div className=" text-3xl font-semibold mb-4">
+          Owned Token
+        </div>
         <table className="table-fixed bg-white w-full shadow rounded overflow-hidden">
           <thead>
             <tr className="bg-gray-100">
@@ -51,10 +55,7 @@ const Table = ({ accounts, ownedTokens, totalBalance }) => {
             {
               ownedTokens.map((token, index) => {
                 return (
-                  <tr
-                    onClick={() => router.push(`/dashboard/offering?tokenAddr=${token.tokenAddr}`)}
-                    className="hover:bg-gray-200 cursor-pointer" key={index}
-                  >
+                  <tr className="hover:bg-gray-200 cursor-pointer" key={index}>
                     <td className="border-t px-6 py-4">
                       {token.symbol}
                     </td>
@@ -76,6 +77,100 @@ const Table = ({ accounts, ownedTokens, totalBalance }) => {
       </div>
     </div>
 
+  )
+}
+
+const TransactionTable = ({ transactions }) => {
+  return (
+    <div className="container mx-auto max-w-4xl mt-12 mb-8">
+      <div className=" text-3xl font-semibold mb-4">
+        Transactions
+      </div>
+      <div className="relative overflow-hidden">
+        <div className="dasboard-table  relative mx-auto">
+          <table className="bg-white w-full shadow rounded overflow-hidden">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="w-3/12 min px-6 py-4 text-left">Tranx ID</th>
+                <th className="w-3/12 px-6 py-4 text-left">Tokens</th>
+                <th className="w-3/12 px-6 py-4 text-left">Amount</th>
+                <th className="w-3/12 px-6 py-4 text-left">ETH Amount</th>
+
+                <th className="w-3/12 px-6 py-4 text-left">From</th>
+                <th className="w-3/12 px-6 py-4 text-left">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((tx, idx) => {
+                return (
+                  <tr
+                    className={idx % 2 !== 0 ? `bg-gray-200` : ``}
+                    key={idx}
+                  >
+                    <td className="border-t px-6 py-4">
+                      {prettyAddress(get(tx, `txId`, `-`))}
+                    </td>
+                    <td className="border-t px-6 py-4">
+                      {prettyAddress(get(tx, `tokenAddr`, `-`))}
+                    </td>
+                    <td className="border-t px-6 py-4">
+                      {prettyBalance(tx.tokens, 18, 6)}
+                    </td>
+                    <td className="border-t px-6 py-4">
+                      {prettyBalance(tx.amount, 18, 6)}
+                    </td>
+                    <td className="border-t px-6 py-4">
+                      {prettyAddress(get(tx, `fromAddr`, `-`))}
+                    </td>
+                    <td className="border-t px-6 py-4">
+                      {formatDate(
+                        Number(get(tx, `timestamp`, 0)) * 1000,
+                        `DD MMM YYYY`
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="inset-shaddow"></div>
+        <style jsx>
+          {`
+          .inset-shaddow {
+            width: 5px;
+            height: calc(100% + 20px);
+            top: 0;
+            right: 0;
+            position: absolute;
+            background: #e2e8f0;
+            -moz-box-shadow: 13px 13px 0px 0px #ffffff;
+            -webkit-box-shadow: 13px 13px 0px 0px #ffffff;
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5);
+          }
+          thead tr th {
+            min-width: 225px;
+          }
+
+          .dasboard-table {
+            overflow-y: auto;
+          }
+
+          .dasboard-table::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 8px;
+            height: 8px;
+          }
+
+          .dasboard-table::-webkit-scrollbar-thumb {
+            border-radius: 8px;
+            border: 1px solid white; /* should match background, can't be transparent */
+            background-color: rgba(0, 0, 0, 0.5);
+          }
+        `}
+        </style>
+      </div>
+    </div>
   )
 }
 
@@ -137,21 +232,33 @@ const Client = ({ tokens }) => {
     }
   }
 
+  console.log(ownedTokens, txList)
+
   useEffect(() => {
     if (web3 && !accounts) {
       requestAccount()
     }
   }, [web3])
 
+  const Content = () => {
+    return (
+      <>
+        <TokenTable
+          accounts={accounts}
+          totalBalance={totalBalance}
+          ownedTokens={ownedTokens}
+        />
+        <TransactionTable transactions={txList} />
+      </>
+    )
+  }
+
   return (
     <div>
       {
         isLoggedIn ?
-          <Table
-            accounts={accounts}
-            totalBalance={totalBalance}
-            ownedTokens={ownedTokens}
-          /> :
+          Content()
+          :
           <button onClick={requestAccount}>Login with ETH</button>
       }
     </div >
